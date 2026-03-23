@@ -1,0 +1,2574 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INDICIA SEO & GEO Dashboard</title>
+<!-- Helvetica Neue system font - no external fonts needed -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --bg2: #ffffff;
+    --bg3: #f7f8fa;
+    --bg4: #eef0f3;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.15);
+    --text: #0f1117;
+    --muted: #6b7280;
+    --muted2: #374151;
+    --accent: #c0103a;
+    --accent2: #920c2b;
+    --green: #059669;
+    --green-dim: rgba(5,150,105,0.1);
+    --amber: #d97706;
+    --amber-dim: rgba(217,119,6,0.1);
+    --red: #dc2626;
+    --red-dim: rgba(220,38,38,0.08);
+    --blue: #2563eb;
+    --blue-dim: rgba(37,99,235,0.08);
+    --accent-dim: rgba(192,16,58,0.08);
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* Layout */
+  .shell { display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 220px;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+  .logo {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    font-weight: 500;
+    color: white;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .logo-icon img, .profile-avatar img, .profile-dropdown-avatar img {
+    width: 100%; height: 100%; object-fit: cover; border-radius: inherit;
+  }
+  .logo-text {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: -0.2px;
+  }
+  .logo-text span { color: var(--accent); }
+
+  .nav { padding: 12px 10px; flex: 1; }
+  .nav-section { margin-bottom: 20px; }
+  .nav-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    padding: 0 10px;
+    margin-bottom: 6px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--muted2);
+    font-size: 13px;
+    font-weight: 400;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+  .nav-item:hover { background: var(--bg3); color: var(--text); }
+  .nav-item.active { background: var(--accent-dim); color: var(--accent); }
+  .nav-icon { font-size: 15px; width: 18px; text-align: center; flex-shrink: 0; }
+
+  /* Main */
+  .main { flex: 1; overflow: auto; }
+  .topbar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    /* needed for centered INDASHIA.IO label */
+    isolation: isolate;
+  }
+  .topbar-title {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--text);
+  }
+  .topbar-actions { display: flex; gap: 10px; align-items: center; }
+  .badge {
+    font-size: 11px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    color: var(--muted2);
+  }
+  .badge.live { color: var(--green); border-color: rgba(5,150,105,0.3); background: var(--green-dim); }
+
+  .page { padding: 24px 28px; display: none; }
+  .page.active { display: block; }
+
+  /* Cards / panels */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    letter-spacing: -0.2px;
+  }
+  .card-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* Metric row */
+  .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .metric-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .metric-label { font-size: 11px; color: var(--muted); font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+  .metric-val { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 28px; font-weight: 300; color: var(--text); line-height: 1; }
+  .metric-delta {
+    font-size: 11px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .delta-up { color: var(--green); }
+  .delta-down { color: var(--red); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+  /* ============ CONTENT CREATION ============ */
+  .content-layout { display: grid; grid-template-columns: 340px 1fr; gap: 18px; }
+  .input-panel { display: flex; flex-direction: column; gap: 14px; }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-size: 11px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .form-input, .form-select, .form-textarea {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
+  .form-textarea { resize: vertical; min-height: 80px; }
+  .form-select option { background: var(--bg3); }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    color: var(--muted2);
+    cursor: pointer;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    transition: all 0.15s;
+  }
+  .tag:hover, .tag.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(192,16,58,0.4); }
+
+  .btn {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-secondary { background: var(--bg3); color: var(--muted2); border: 1px solid var(--border2); }
+  .btn-secondary:hover { color: var(--text); border-color: var(--border2); background: var(--bg4); }
+  .btn-full { width: 100%; }
+
+  /* Output panel */
+  .output-panel { display: flex; flex-direction: column; gap: 0; }
+  .output-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+  .output-tab {
+    padding: 10px 16px;
+    font-size: 12px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.15s;
+  }
+  .output-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .output-tab:hover { color: var(--text); }
+
+  .output-content {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    padding: 20px;
+    min-height: 400px;
+    flex: 1;
+  }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  .ai-response {
+    line-height: 1.75;
+    color: var(--muted2);
+    font-size: 13.5px;
+  }
+  .ai-response h3 {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text);
+    margin: 16px 0 8px;
+  }
+  .ai-response h3:first-child { margin-top: 0; }
+  .ai-response p { margin-bottom: 10px; }
+  .ai-response ul { padding-left: 18px; }
+  .ai-response li { margin-bottom: 5px; }
+  .ai-response strong { color: var(--text); font-weight: 500; }
+
+  .loading-dots span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin: 0 2px;
+    animation: dot-bounce 1.2s ease-in-out infinite;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dot-bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* Chat messages */
+  .chat-thread { display: flex; flex-direction: column; gap: 14px; }
+  .msg { display: flex; gap: 10px; align-items: flex-start; }
+  .msg-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 500; flex-shrink: 0;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+  }
+  .msg-avatar.ai { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(192,16,58,0.3); }
+  .msg-avatar.user { background: var(--bg4); color: var(--muted2); border: 1px solid var(--border2); }
+  .msg-body { font-size: 13px; line-height: 1.65; color: var(--muted2); flex: 1; }
+  .msg-body.user { color: var(--text); }
+
+  .chat-input-row { display: flex; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .chat-input {
+    flex: 1; background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 8px; color: var(--text); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 13px; padding: 10px 14px; outline: none;
+  }
+  .chat-input:focus { border-color: var(--accent); }
+
+  /* Meta table */
+  .meta-table { width: 100%; border-collapse: collapse; }
+  .meta-table th {
+    text-align: left; padding: 8px 12px; font-size: 10px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--muted); border-bottom: 1px solid var(--border);
+  }
+  .meta-table td { padding: 12px 12px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }
+  .meta-table tr:last-child td { border-bottom: none; }
+  .meta-score {
+    display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+  }
+  .score-good { background: var(--green-dim); color: var(--green); }
+  .score-mid { background: var(--amber-dim); color: var(--amber); }
+
+  /* Brief */
+  .brief-section { margin-bottom: 20px; }
+  .brief-section-title {
+    font-size: 11px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--accent); margin-bottom: 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brief-item {
+    display: flex; align-items: flex-start; gap: 8px; margin-bottom: 7px;
+    font-size: 13px; color: var(--muted2); line-height: 1.5;
+  }
+  .brief-bullet { color: var(--accent); margin-top: 2px; font-size: 8px; flex-shrink: 0; }
+
+  /* ============ ANALYTICS ============ */
+  .chart-wrap { position: relative; height: 220px; }
+  .chart-wrap-sm { position: relative; height: 170px; }
+
+  .kw-table { width: 100%; border-collapse: collapse; }
+  .kw-table th {
+    text-align: left; padding: 8px 12px; font-size: 10px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--muted); border-bottom: 1px solid var(--border);
+  }
+  .kw-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted2); }
+  .kw-table tr:last-child td { border-bottom: none; }
+  .kw-table td:first-child { color: var(--text); font-weight: 500; }
+  .pos-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 22px; border-radius: 6px; font-size: 11px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; font-weight: 500;
+  }
+  .pos-1 { background: var(--green-dim); color: var(--green); }
+  .pos-top { background: var(--amber-dim); color: var(--amber); }
+  .pos-mid { background: var(--bg4); color: var(--muted2); }
+
+  .trend-up { color: var(--green); font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; font-size: 11px; }
+  .trend-down { color: var(--red); font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; font-size: 11px; }
+
+  .citation-list { display: flex; flex-direction: column; gap: 10px; }
+  .citation-item {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 12px 14px;
+  }
+  .citation-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .citation-source {
+    font-size: 11px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    background: var(--accent-dim); color: var(--accent);
+    padding: 2px 8px; border-radius: 20px; border: 1px solid rgba(192,16,58,0.25);
+  }
+  .citation-date { font-size: 11px; color: var(--muted); margin-left: auto; }
+  .citation-text { font-size: 13px; color: var(--muted2); line-height: 1.6; }
+  .citation-url { font-size: 11px; color: var(--accent); margin-top: 6px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; }
+
+  .mention-source {
+    font-size: 11px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    padding: 2px 8px; border-radius: 20px; border: 1px solid;
+  }
+  .mention-gpt { background: rgba(16,163,127,0.1); color: #10a37f; border-color: rgba(16,163,127,0.3); }
+  .mention-perplexity { background: var(--blue-dim); color: var(--blue); border-color: rgba(96,165,250,0.3); }
+  .mention-gemini { background: rgba(234,67,53,0.1); color: #ea4335; border-color: rgba(234,67,53,0.2); }
+
+  /* Competitor */
+  .comp-row { display: grid; grid-template-columns: 160px 1fr 60px 60px 70px; gap: 0; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .comp-row:last-child { border-bottom: none; }
+  .comp-row.head { padding: 6px 12px 8px; }
+  .comp-row.head span { font-size: 10px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
+  .comp-bar { height: 5px; border-radius: 3px; background: var(--bg4); overflow: hidden; }
+  .comp-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.6s ease; }
+  .comp-name { font-weight: 500; color: var(--text); }
+  .comp-name.you { color: var(--accent); }
+
+  .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+  .section-title { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 20px; font-weight: 300; }
+  .section-sub { font-size: 12px; color: var(--muted); }
+
+  .period-tabs { display: flex; gap: 4px; }
+  .period-tab {
+    padding: 5px 12px; border-radius: 6px; font-size: 11px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; cursor: pointer;
+    border: 1px solid var(--border); color: var(--muted);
+    background: none; transition: all 0.15s;
+  }
+  .period-tab.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(192,16,58,0.3); }
+
+
+
+  .sparkline { display: flex; align-items: flex-end; gap: 3px; height: 30px; }
+  .spark-bar { width: 5px; border-radius: 2px 2px 0 0; background: var(--accent); opacity: 0.5; flex-shrink: 0; transition: opacity 0.15s; }
+  .spark-bar:hover { opacity: 1; }
+
+  /* ============ PROFILE SWITCHER ============ */
+  .profile-switcher {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+    user-select: none;
+  }
+  .profile-switcher:hover { background: var(--bg3); }
+  .profile-avatar {
+    width: 30px; height: 30px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    font-weight: 500; color: white; flex-shrink: 0;
+  }
+  .profile-name {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 13px; font-weight: 400;
+    color: var(--text); white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .profile-url {
+    font-size: 10px; color: var(--muted);
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .profile-chevron {
+    font-size: 11px; color: var(--muted);
+    flex-shrink: 0; transition: transform 0.2s;
+    margin-left: auto;
+  }
+  .profile-dropdown {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    display: none;
+    flex-direction: column;
+  }
+  .profile-dropdown.open { display: flex; }
+  .profile-dropdown-list { padding: 6px 8px; display: flex; flex-direction: column; gap: 2px; }
+  .profile-dropdown-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 7px 8px; border-radius: 7px;
+    cursor: pointer; transition: background 0.12s;
+    border: none; background: none; width: 100%; text-align: left;
+  }
+  .profile-dropdown-item:hover { background: var(--bg4); }
+  .profile-dropdown-item.active { background: var(--accent-dim); }
+  .profile-dropdown-avatar {
+    width: 22px; height: 22px; border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    font-weight: 500; color: white; flex-shrink: 0;
+  }
+  .profile-dropdown-name { font-size: 12px; color: var(--text); font-weight: 500; }
+  .profile-dropdown-domain { font-size: 10px; color: var(--muted); font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; }
+  .profile-dropdown-divider { height: 1px; background: var(--border); margin: 0 8px; }
+  .profile-add-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 16px; border: none; background: none;
+    color: var(--accent); font-size: 12px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    cursor: pointer; transition: background 0.12s; text-align: left; width: 100%;
+  }
+  .profile-add-btn:hover { background: var(--bg4); }
+
+  /* ============ MODAL ============ */
+  .modal-step {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    background: var(--bg4); color: var(--muted);
+    border: 1px solid var(--border2); flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .modal-step.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .modal-step.done { background: var(--green-dim); color: var(--green); border-color: rgba(34,201,135,0.3); }
+  .loc-option {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 14px; border-radius: 9px;
+    border: 1px solid var(--border); background: var(--bg3);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .loc-option:hover { border-color: var(--border2); }
+  .loc-option.selected { border-color: var(--accent); background: var(--accent-dim); }
+  .loc-radio {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid var(--border2); flex-shrink: 0;
+    margin-top: 2px; transition: all 0.15s;
+  }
+  .loc-option.selected .loc-radio { border-color: var(--accent); background: var(--accent); }
+  .comp-input-row { display: flex; align-items: center; gap: 8px; }
+  .comp-num {
+    width: 22px; height: 22px; border-radius: 5px;
+    background: var(--bg4); border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    color: var(--muted); flex-shrink: 0;
+  }
+
+  /* ============ BRANDING PANEL ============ */
+  .branding-toggle {
+    margin: 0 10px 12px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: calc(100% - 20px);
+    transition: all 0.15s;
+  }
+  .branding-toggle:hover { color: var(--text); border-color: var(--border2); }
+  .branding-panel {
+    margin: 0 10px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    display: none;
+  }
+  .branding-panel.open { display: block; }
+  .branding-field { margin-bottom: 12px; }
+  .branding-field:last-child { margin-bottom: 0; }
+  .branding-label { font-size: 10px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .branding-input {
+    width: 100%; background: var(--bg4); border: 1px solid var(--border2);
+    border-radius: 6px; color: var(--text); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px; padding: 7px 10px; outline: none;
+  }
+  .branding-input:focus { border-color: var(--accent); }
+  .color-swatches { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .swatch {
+    width: 22px; height: 22px; border-radius: 6px; cursor: pointer;
+    border: 2px solid transparent; transition: transform 0.15s;
+    flex-shrink: 0;
+  }
+  .swatch:hover { transform: scale(1.15); }
+  .swatch.selected { border-color: white; }
+  .color-custom-row { display: flex; align-items: center; gap: 8px; }
+  .color-picker {
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border2);
+    cursor: pointer; padding: 0; background: none; flex-shrink: 0;
+  }
+  .color-hex {
+    flex: 1; background: var(--bg4); border: 1px solid var(--border2);
+    border-radius: 6px; color: var(--text); font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    font-size: 11px; padding: 5px 8px; outline: none;
+  }
+  .color-hex:focus { border-color: var(--accent); }
+  .branding-save {
+    width: 100%; padding: 7px; border-radius: 6px; background: var(--accent);
+    border: none; color: white; font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 500; cursor: pointer; margin-top: 12px; transition: background 0.15s;
+  }
+  .branding-save:hover { background: var(--accent2); }
+  /* ============ TOOLS CONNECT ============ */
+  .tools-fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 50;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 50px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    transition: all 0.15s;
+  }
+  .tools-fab:hover {
+    background: var(--bg3);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+  #page-traffic.active ~ * .tools-fab,
+  .tools-fab.visible { display: flex; }
+
+  .tools-panel {
+    position: fixed;
+    bottom: 0; right: 0;
+    width: 420px;
+    max-width: 100vw;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-bottom: none;
+    border-radius: 16px 16px 0 0;
+    padding: 24px;
+    z-index: 201;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+  }
+  .tools-panel.open { transform: translateY(0); }
+
+  .tools-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .tool-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: var(--bg3);
+    transition: border-color 0.15s;
+  }
+  .tool-card.connected { border-color: rgba(34,201,135,0.3); background: rgba(34,201,135,0.04); }
+  .tool-logo {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .tool-info { flex: 1; min-width: 0; }
+  .tool-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .tool-desc { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .tool-connect-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    cursor: pointer;
+    border: 1px solid var(--border2);
+    background: var(--bg4);
+    color: var(--muted2);
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .tool-connect-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .tool-connected-badge {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    color: var(--green);
+    white-space: nowrap;
+  }
+  .seo3p-tab {
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+    cursor: pointer;
+    border: 1px solid var(--border2);
+    background: none;
+    color: var(--muted);
+    transition: all 0.12s;
+  }
+  .seo3p-tab.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(192,16,58,0.3); }
+  .tools-panel-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Google OAuth mock popup */
+  .oauth-popup {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    background: #202124;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 28px 24px;
+    z-index: 300;
+    display: none;
+  }
+  .oauth-popup.open { display: block; }
+  .oauth-google-logo {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 20px;
+  }
+  .oauth-account-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; border-radius: 8px;
+    cursor: pointer; transition: background 0.12s;
+    border: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.04);
+  }
+  .oauth-account-item:hover { background: rgba(255,255,255,0.08); }
+  .oauth-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500; color: white;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- PROFILE MODAL OVERLAY -->
+  <div id="profile-modal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;">
+    <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;padding:28px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+        <div>
+          <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:18px;font-weight:300;color:var(--text)">Nieuw profiel</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">Configureer een website of klant</div>
+        </div>
+        <button onclick="closeProfileModal()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;">✕</button>
+      </div>
+
+      <!-- Step indicator -->
+      <div style="display:flex;gap:6px;margin-bottom:28px;" id="modal-steps">
+        <div class="modal-step active" data-step="1">1</div>
+        <div style="flex:1;height:1px;background:var(--border);margin:auto;"></div>
+        <div class="modal-step" data-step="2">2</div>
+        <div style="flex:1;height:1px;background:var(--border);margin:auto;"></div>
+        <div class="modal-step" data-step="3">3</div>
+        <div style="flex:1;height:1px;background:var(--border);margin:auto;"></div>
+        <div class="modal-step" data-step="4">4</div>
+      </div>
+
+      <!-- Step 1: Bedrijfsnaam & Website -->
+      <div id="modal-step-1" class="modal-step-pane">
+        <div style="font-size:13px;color:var(--accent);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.8px;">Stap 1 — Bedrijf</div>
+        <div class="form-group" style="margin-bottom:14px">
+          <div class="form-label">Bedrijfsnaam</div>
+          <input class="form-input" id="new-company" type="text" placeholder="bijv. Acme Marketing BV">
+        </div>
+        <div class="form-group" style="margin-bottom:14px">
+          <div class="form-label">Website</div>
+          <input class="form-input" id="new-website" type="text" placeholder="bijv. acme.nl">
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:20px;">
+          <button class="btn btn-primary" onclick="modalNext(1)">Volgende →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Locatie focus -->
+      <div id="modal-step-2" class="modal-step-pane" style="display:none">
+        <div style="font-size:13px;color:var(--accent);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.8px;">Stap 2 — Locatiefocus</div>
+        <div class="form-label" style="margin-bottom:12px">Op welk geografisch niveau wil je ranken?</div>
+        <div style="display:flex;flex-direction:column;gap:10px;" id="location-options">
+          <label class="loc-option" onclick="selectLocation(this,'landelijk')">
+            <div class="loc-radio"></div>
+            <div>
+              <div style="font-size:13px;color:var(--text);font-weight:500">Landelijk</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Heel Nederland — voor nationale merken en webshops</div>
+            </div>
+          </label>
+          <label class="loc-option" onclick="selectLocation(this,'regionaal')">
+            <div class="loc-radio"></div>
+            <div>
+              <div style="font-size:13px;color:var(--text);font-weight:500">Regionaal</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Provincie of regio — bijv. Noord-Holland, Randstad</div>
+            </div>
+          </label>
+          <label class="loc-option" onclick="selectLocation(this,'plaats')">
+            <div class="loc-radio"></div>
+            <div>
+              <div style="font-size:13px;color:var(--text);font-weight:500">Plaatselijk</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Specifieke stad of gemeente — local SEO focus</div>
+            </div>
+          </label>
+        </div>
+        <div id="location-detail-wrap" style="display:none;margin-top:14px;">
+          <div class="form-label" style="margin-bottom:6px" id="location-detail-label">Regio / Provincie</div>
+          <input class="form-input" id="new-location-detail" type="text" placeholder="bijv. Noord-Holland">
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:20px;">
+          <button class="btn btn-secondary" onclick="modalBack(2)">← Terug</button>
+          <button class="btn btn-primary" onclick="modalNext(2)">Volgende →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Concurrenten -->
+      <div id="modal-step-3" class="modal-step-pane" style="display:none">
+        <div style="font-size:13px;color:var(--accent);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.8px;">Stap 3 — Concurrenten</div>
+        <div style="font-size:13px;color:var(--muted2);margin-bottom:16px;">Voeg maximaal 5 concurrenten toe via domeinnaam.</div>
+        <div id="competitor-inputs" style="display:flex;flex-direction:column;gap:8px;">
+          <div class="comp-input-row">
+            <span class="comp-num">1</span>
+            <input class="form-input" type="text" placeholder="concurrent.nl" style="flex:1">
+          </div>
+        </div>
+        <button onclick="addCompetitorField()" id="add-comp-btn" style="background:none;border:1px dashed var(--border2);color:var(--muted);font-size:12px;border-radius:8px;padding:8px;cursor:pointer;width:100%;margin-top:8px;font-family:'SF Mono','Fira Mono',Consolas,monospace;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">+ concurrent toevoegen</button>
+        <div style="display:flex;justify-content:space-between;margin-top:20px;">
+          <button class="btn btn-secondary" onclick="modalBack(3)">← Terug</button>
+          <button class="btn btn-primary" onclick="modalNext(3)">Volgende →</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Bevestiging -->
+      <div id="modal-step-4" class="modal-step-pane" style="display:none">
+        <div style="font-size:13px;color:var(--accent);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.8px;">Stap 4 — Bevestigen</div>
+        <div id="modal-summary" style="background:var(--bg3);border-radius:10px;padding:16px;margin-bottom:20px;font-size:13px;line-height:1.8;color:var(--muted2);"></div>
+        <div style="display:flex;justify-content:space-between;">
+          <button class="btn btn-secondary" onclick="modalBack(4)">← Terug</button>
+          <button class="btn btn-primary" onclick="saveProfile()" style="min-width:120px;">✦ Opslaan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <!-- Profile switcher -->
+    <div class="profile-switcher" id="profile-switcher" onclick="toggleProfileDropdown()">
+      <div class="profile-avatar" id="profile-avatar">I</div>
+      <div style="flex:1;min-width:0;">
+        <div class="profile-name" id="profile-name">INDICIA</div>
+        <div class="profile-url" id="profile-url">indicia.nl</div>
+      </div>
+      <span class="profile-chevron" id="profile-chevron">▾</span>
+    </div>
+
+    <!-- Profile dropdown -->
+    <div class="profile-dropdown" id="profile-dropdown">
+      <div class="profile-dropdown-list" id="profile-dropdown-list"></div>
+      <div class="profile-dropdown-divider"></div>
+      <button class="profile-add-btn" onclick="openProfileModal()">
+        <span style="font-size:14px;line-height:1">+</span>
+        <span>Nieuw profiel</span>
+      </button>
+    </div>
+    <div class="nav">
+      <div class="nav-section">
+        <div class="nav-label">Creatie</div>
+        <button class="nav-item active" onclick="goTo('content')">
+          <span class="nav-icon">✦</span> Content studio
+        </button>
+        <button class="nav-item" onclick="goTo('meta')">
+          <span class="nav-icon">◈</span> Meta generator
+        </button>
+        <button class="nav-item" onclick="goTo('brief')">
+          <span class="nav-icon">◇</span> Content brief
+        </button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Analytics</div>
+        <button class="nav-item" onclick="goTo('traffic')">
+          <span class="nav-icon">▲</span> Organisch traffic
+        </button>
+        <button class="nav-item" onclick="goTo('ai')">
+          <span class="nav-icon">◉</span> AI mentions
+        </button>
+        <button class="nav-item" onclick="goTo('keywords')">
+          <span class="nav-icon">≡</span> Keywords
+        </button>
+        <button class="nav-item" onclick="goTo('competitor')">
+          <span class="nav-icon">⊕</span> Concurrentie
+        </button>
+      </div>
+    </div>
+
+    <!-- Branding panel at bottom -->
+    <div style="margin-top:auto; border-top: 1px solid var(--border); padding-top: 10px;">
+      <button class="branding-toggle" onclick="toggleBranding()">
+        <span style="font-size:13px">◑</span>
+        <span>Huisstijl</span>
+        <span id="branding-arrow" style="margin-left:auto;transition:transform 0.2s">▾</span>
+      </button>
+      <div class="branding-panel" id="branding-panel">
+        <div class="branding-field">
+          <div class="branding-label">Bedrijfsnaam</div>
+          <input class="branding-input" id="brand-name" type="text" placeholder="Jouw bedrijf" value="INDICIA">
+        </div>
+        <div class="branding-field">
+          <div class="branding-label">Logo / afbeelding</div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <!-- Preview -->
+            <div id="logo-preview" style="width:48px;height:48px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;font-family:'SF Mono','Fira Mono',Consolas,monospace;font-weight:500;color:white;flex-shrink:0;overflow:hidden;border:1px solid var(--border2);">I</div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+              <!-- Upload button -->
+              <label for="logo-upload" style="display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--bg4);border:1px solid var(--border2);border-radius:7px;cursor:pointer;font-size:11px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted2)'">
+                <span style="font-size:13px">&#x21A5;</span> Foto uploaden
+              </label>
+              <input type="file" id="logo-upload" accept="image/*" style="display:none" onchange="handleLogoUpload(this)">
+              <!-- Letter fallback -->
+              <div style="display:flex;align-items:center;gap:6px;">
+                <input class="branding-input" id="brand-letter" type="text" maxlength="2" placeholder="I" value="I" style="flex:1;padding:7px 10px;font-size:13px;" oninput="updateLogoPreview()">
+                <button onclick="clearLogoPhoto()" id="clear-logo-btn" title="Verwijder foto" style="display:none;background:none;border:1px solid var(--border2);border-radius:6px;color:var(--muted);font-size:11px;padding:7px 9px;cursor:pointer;white-space:nowrap;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">&#x2715; Foto</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="branding-field">
+          <div class="branding-label">Merkkleur</div>
+          <div class="color-swatches" id="color-swatches">
+            <div class="swatch" style="background:#7c6af7" data-color="#7c6af7" onclick="selectSwatch(this)"></div>
+            <div class="swatch selected" style="background:#c0103a" data-color="#c0103a" onclick="selectSwatch(this)"></div><div class="swatch" style="background:#06b6d4" data-color="#06b6d4" onclick="selectSwatch(this)"></div>
+            <div class="swatch" style="background:#22c987" data-color="#22c987" onclick="selectSwatch(this)"></div>
+            <div class="swatch" style="background:#f59e0b" data-color="#f59e0b" onclick="selectSwatch(this)"></div>
+            <div class="swatch" style="background:#ef4444" data-color="#ef4444" onclick="selectSwatch(this)"></div>
+            <div class="swatch" style="background:#ec4899" data-color="#ec4899" onclick="selectSwatch(this)"></div>
+            <div class="swatch" style="background:#f97316" data-color="#f97316" onclick="selectSwatch(this)"></div>
+            <div class="swatch" style="background:#64748b" data-color="#64748b" onclick="selectSwatch(this)"></div>
+          </div>
+          <div class="color-custom-row">
+            <input class="color-picker" id="color-picker" type="color" value="#c0103a" oninput="onColorPick(this.value)">
+            <input class="color-hex" id="color-hex" type="text" value="#c0103a" maxlength="7" oninput="onHexInput(this.value)" placeholder="#c0103a">
+          </div>
+        </div>
+        <button class="branding-save" onclick="applyBranding()">✦ Toepassen</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Content studio</div>
+      <div style="position:absolute;left:50%;transform:translateX(-50%);pointer-events:none;">
+        <span style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:700;color:#0f1117;letter-spacing:-0.3px;">INDASHIA.IO</span>
+      </div>
+      <div class="topbar-actions">
+        <span class="badge live">● Live data</span>
+        <span class="badge">mrt 2026</span>
+      </div>
+    </div>
+
+    <!-- ============ CONTENT STUDIO ============ -->
+    <div class="page active" id="page-content">
+      <div class="content-layout">
+
+        <!-- Input panel -->
+        <div class="input-panel">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <div class="card-title">Nieuw artikel</div>
+                <div class="card-sub">AI-powered schrijfassistent</div>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px">
+              <div class="form-label">Primaire keyword</div>
+              <input class="form-input" id="kw-input" type="text" placeholder="bijv. duurzaam beleggen 2026" value="organische SEO strategie">
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px">
+              <div class="form-label">Type content</div>
+              <select class="form-select" id="content-type">
+                <option value="blog">Blog artikel</option>
+                <option value="pillar">Pillar page</option>
+                <option value="how-to">How-to gids</option>
+                <option value="review">Review / vergelijking</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px">
+              <div class="form-label">Toon</div>
+              <div class="tag-row">
+                <span class="tag active" onclick="toggleTag(this)">Professioneel</span>
+                <span class="tag" onclick="toggleTag(this)">Informeel</span>
+                <span class="tag" onclick="toggleTag(this)">Autoritair</span>
+                <span class="tag" onclick="toggleTag(this)">Conversatief</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px">
+              <div class="form-label">Doelgroep</div>
+              <input class="form-input" type="text" placeholder="bijv. MKB eigenaren, marketeers" value="SEO professionals & marketeers">
+            </div>
+
+            <div class="form-group" style="margin-bottom:16px">
+              <div class="form-label">Extra instructies</div>
+              <textarea class="form-textarea" placeholder="Specifieke eisen, bronnen, structuur..."></textarea>
+            </div>
+
+            <button class="btn btn-primary btn-full" onclick="generateContent()">
+              ✦ Genereer content
+            </button>
+          </div>
+
+          <div class="card" id="chat-card">
+            <div class="card-title" style="margin-bottom:14px">Verfijn met AI</div>
+            <div class="chat-thread" id="chat-thread">
+              <div class="msg">
+                <div class="msg-avatar ai">AI</div>
+                <div class="msg-body">Stel een vraag of geef een instructie om de gegenereerde content aan te passen.</div>
+              </div>
+            </div>
+            <div class="chat-input-row">
+              <input class="chat-input" id="chat-in" placeholder="Maak de intro pakkender..." onkeydown="if(event.key==='Enter') sendChat()">
+              <button class="btn btn-secondary" onclick="sendChat()">→</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output panel -->
+        <div class="output-panel">
+          <div class="output-tabs card" style="border-radius: var(--radius-lg) var(--radius-lg) 0 0; border-bottom: 1px solid var(--border);">
+            <div class="output-tab active" onclick="switchTab('artikel',this)">Artikel</div>
+            <div class="output-tab" onclick="switchTab('seo',this)">SEO analyse</div>
+            <div class="output-tab" onclick="switchTab('structuur',this)">Structuur</div>
+          </div>
+          <div class="output-content">
+
+            <div class="tab-pane active" id="tab-artikel">
+              <div id="artikel-output" class="ai-response">
+                <p style="color:var(--muted); font-style:italic; font-size:13px;">
+                  Vul het formulier in en klik op "Genereer content" om een artikel te maken.
+                </p>
+              </div>
+            </div>
+
+            <div class="tab-pane" id="tab-seo">
+              <div id="seo-output">
+                <p style="color:var(--muted); font-style:italic; font-size:13px;">Genereer eerst content voor een SEO analyse.</p>
+              </div>
+            </div>
+
+            <div class="tab-pane" id="tab-structuur">
+              <div id="struct-output">
+                <p style="color:var(--muted); font-style:italic; font-size:13px;">Genereer eerst content voor een structuuroverzicht.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ META GENERATOR ============ -->
+    <div class="page" id="page-meta">
+      <div style="max-width:900px">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Meta generator</div>
+            <div class="section-sub">Genereer geoptimaliseerde titles en descriptions</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="form-group" style="margin-bottom:12px">
+            <div class="form-label">Pagina onderwerp / keyword</div>
+            <input class="form-input" id="meta-kw" type="text" placeholder="bijv. beste hypotheek vergelijker" value="SEO bureau Amsterdam">
+          </div>
+          <div class="form-group" style="margin-bottom:16px">
+            <div class="form-label">Pagina type</div>
+            <div class="tag-row">
+              <span class="tag active" onclick="toggleTag(this)">Landingspagina</span>
+              <span class="tag" onclick="toggleTag(this)">Blog</span>
+              <span class="tag" onclick="toggleTag(this)">Product</span>
+              <span class="tag" onclick="toggleTag(this)">Categorie</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="generateMeta()">✦ Genereer meta tags</button>
+        </div>
+
+        <div id="meta-results" class="card">
+          <table class="meta-table">
+            <thead>
+              <tr>
+                <th style="width:100px">Type</th>
+                <th>Content</th>
+                <th style="width:80px">Tekens</th>
+                <th style="width:80px">Score</th>
+              </tr>
+            </thead>
+            <tbody id="meta-tbody">
+              <tr><td colspan="4" style="color:var(--muted); font-style:italic; padding:16px">Nog geen meta tags gegenereerd.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ CONTENT BRIEF ============ -->
+    <div class="page" id="page-brief">
+      <div style="max-width:900px">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Content brief</div>
+            <div class="section-sub">Volledige schrijfopdracht voor je team</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="form-group">
+              <div class="form-label">Primair keyword</div>
+              <input class="form-input" id="brief-kw" type="text" value="content marketing strategie">
+            </div>
+            <div class="form-group">
+              <div class="form-label">Zoekvolume (maand)</div>
+              <input class="form-input" type="text" placeholder="bijv. 2.400">
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="generateBrief()">✦ Maak content brief</button>
+        </div>
+
+        <div id="brief-output-wrap" class="card" style="display:none">
+          <div id="brief-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ TRAFFIC ============ -->
+    <div class="page" id="page-traffic">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Organisch traffic</div>
+          <div class="section-sub">Google Search Console — afgelopen 90 dagen</div>
+        </div>
+        <div class="period-tabs">
+          <button class="period-tab active">28d</button>
+          <button class="period-tab">90d</button>
+          <button class="period-tab">12m</button>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-label">Clicks</div>
+          <div class="metric-val">24,871</div>
+          <div class="metric-delta delta-up">▲ +14.2% vs vorige periode</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Impressions</div>
+          <div class="metric-val">312,4k</div>
+          <div class="metric-delta delta-up">▲ +8.6%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Gem. CTR</div>
+          <div class="metric-val">7.9%</div>
+          <div class="metric-delta delta-up">▲ +0.8pp</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Gem. positie</div>
+          <div class="metric-val">11.3</div>
+          <div class="metric-delta delta-up">▲ +2.1 pos</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">Clicks & Impressions</div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="trafficChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">CTR per device</div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="deviceChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="position:relative">
+        <div class="card-head"><div class="card-title">Top pagina's</div></div>
+        <table class="kw-table">
+          <thead><tr><th>Pagina</th><th>Clicks</th><th>Impr.</th><th>CTR</th><th>Positie</th></tr></thead>
+          <tbody>
+            <tr><td>/seo-strategie-2026</td><td>3,241</td><td>28,400</td><td style="color:var(--green)">11.4%</td><td><span class="pos-badge pos-1">4</span></td></tr>
+            <tr><td>/keyword-onderzoek</td><td>2,108</td><td>24,100</td><td>8.7%</td><td><span class="pos-badge pos-top">7</span></td></tr>
+            <tr><td>/technische-seo</td><td>1,876</td><td>18,900</td><td>9.9%</td><td><span class="pos-badge pos-1">3</span></td></tr>
+            <tr><td>/linkbuilding-gids</td><td>1,543</td><td>22,300</td><td>6.9%</td><td><span class="pos-badge pos-top">9</span></td></tr>
+            <tr><td>/local-seo</td><td>1,210</td><td>16,700</td><td>7.2%</td><td><span class="pos-badge pos-mid">14</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Floating connect button -->
+      <button class="tools-fab" id="tools-fab" onclick="openToolsPanel()">
+        <span style="font-size:15px">⚡</span>
+        <span>Koppel databronnen</span>
+      </button>
+    </div>
+
+    <!-- Tools connect modal -->
+    <div id="tools-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.65);" onclick="handleToolsOverlayClick(event)">
+      <div class="tools-panel" id="tools-panel">
+        <div class="tools-panel-header">
+          <div>
+            <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;font-weight:300;color:var(--text)">Databronnen koppelen</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">Verbind je tools voor live data in het dashboard</div>
+          </div>
+          <button onclick="closeToolsPanel()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;line-height:1;">✕</button>
+        </div>
+
+        <!-- Tool: GA4 -->
+        <div class="tool-card" id="tool-ga4">
+          <div class="tool-logo" style="background:linear-gradient(135deg,#e8710a,#f9ab00)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+          </div>
+          <div class="tool-info">
+            <div class="tool-name">Google Analytics 4</div>
+            <div class="tool-desc">Sessies, conversies & gebruikersgedrag per kanaal</div>
+          </div>
+          <div class="tool-status" id="status-ga4">
+            <button class="tool-connect-btn" onclick="connectTool('ga4')">Inloggen</button>
+          </div>
+        </div>
+
+        <!-- Tool: GSC -->
+        <div class="tool-card" id="tool-gsc">
+          <div class="tool-logo" style="background:linear-gradient(135deg,#4285f4,#34a853)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M21 11h-3.17l2.54-2.54-1.41-1.41L15 11h-2V9l3.95-3.95-1.41-1.41L13 6.17V3h-2v3.17L8.46 3.64 7.05 5.05 11 9v2H9L5.05 7.05 3.64 8.46 6.17 11H3v2h3.17L3.64 15.54l1.41 1.41L9 13h2v2l-3.95 3.95 1.41 1.41L11 17.83V21h2v-3.17l2.54 2.54 1.41-1.41L13 15v-2h2l3.95 3.95 1.41-1.41L17.83 13H21v-2z"/></svg>
+          </div>
+          <div class="tool-info">
+            <div class="tool-name">Google Search Console</div>
+            <div class="tool-desc">Clicks, impressions, CTR & posities rechtstreeks van Google</div>
+          </div>
+          <div class="tool-status" id="status-gsc">
+            <button class="tool-connect-btn" onclick="connectTool('gsc')">Inloggen</button>
+          </div>
+        </div>
+
+        <!-- Tool: Ahrefs / Semrush toggle -->
+        <div class="tool-card" id="tool-seo3p">
+          <div class="tool-logo" style="background:linear-gradient(135deg,#ff6b35,#f7931e)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div class="tool-info">
+            <div class="tool-name" id="seo3p-name">Ahrefs / Semrush</div>
+            <div class="tool-desc">Rankingdata, backlinks & keyword-moeilijkheidsgraad</div>
+            <!-- Toggle between Ahrefs / Semrush -->
+            <div style="display:flex;gap:6px;margin-top:8px;">
+              <button class="seo3p-tab active" id="tab-ahrefs" onclick="selectSeo3p('ahrefs')">Ahrefs</button>
+              <button class="seo3p-tab" id="tab-semrush" onclick="selectSeo3p('semrush')">Semrush</button>
+            </div>
+          </div>
+          <div class="tool-status" id="status-seo3p">
+            <button class="tool-connect-btn" onclick="connectTool('seo3p')">API key</button>
+          </div>
+        </div>
+
+        <!-- API key input (hidden until needed) -->
+        <div id="apikey-form" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:4px;">
+          <div style="font-size:11px;font-family:'SF Mono','Fira Mono',Consolas,monospace;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;" id="apikey-label">Ahrefs API key</div>
+          <div style="display:flex;gap:8px;">
+            <input class="form-input" id="apikey-input" type="password" placeholder="Plak hier je API key..." style="flex:1">
+            <button class="btn btn-primary" onclick="saveApiKey()" style="white-space:nowrap;padding:10px 14px;font-size:12px;">Verbinden</button>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px;">Je key wordt alleen lokaal opgeslagen in deze sessie.</div>
+        </div>
+
+        <div class="tools-panel-footer">
+          <div style="font-size:11px;color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;">
+            <span id="connected-count">0</span> van 3 bronnen verbonden
+          </div>
+          <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="closeToolsPanel()">Sluiten</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ AI MENTIONS ============ -->
+    <div class="page" id="page-ai">
+      <div class="section-header">
+        <div>
+          <div class="section-title">AI mentions & citations</div>
+          <div class="section-sub">Vermeldingen in ChatGPT, Perplexity, Gemini & meer</div>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-label">Totaal mentions</div>
+          <div class="metric-val">284</div>
+          <div class="metric-delta delta-up">▲ +34 deze maand</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Citations</div>
+          <div class="metric-val">91</div>
+          <div class="metric-delta delta-up">▲ +12%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Brand score</div>
+          <div class="metric-val">7.4</div>
+          <div class="metric-delta" style="color:var(--muted2)">— stabiel</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Sentiment</div>
+          <div class="metric-val" style="color:var(--green)">+86%</div>
+          <div class="metric-delta delta-up">▲ positief</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Mentions per AI platform</div></div>
+          <div class="chart-wrap">
+            <canvas id="aiPlatformChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">Trend mentions (90d)</div></div>
+          <div class="chart-wrap">
+            <canvas id="aiTrendChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Recente citations</div></div>
+        <div class="citation-list">
+          <div class="citation-item">
+            <div class="citation-header">
+              <span class="mention-source mention-gpt">ChatGPT</span>
+              <span class="citation-date">17 mrt 2026</span>
+            </div>
+            <div class="citation-text">Volgens experts als <strong style="color:var(--text)">SEOintel</strong> is het optimaliseren voor AI-overzichten de grootste SEO-kans van 2026. Ze adviseren gestructureerde data en E-E-A-T als prioriteit...</div>
+            <div class="citation-url">→ Prompt: "beste SEO strategie 2026"</div>
+          </div>
+          <div class="citation-item">
+            <div class="citation-header">
+              <span class="mention-source mention-perplexity">Perplexity</span>
+              <span class="citation-date">15 mrt 2026</span>
+            </div>
+            <div class="citation-text">De gids van <strong style="color:var(--text)">SEOintel</strong> over technische SEO wordt aangehaald als een van de meest complete bronnen voor developers die SEO willen verbeteren...</div>
+            <div class="citation-url">→ Prompt: "technische SEO checklist"</div>
+          </div>
+          <div class="citation-item">
+            <div class="citation-header">
+              <span class="mention-source mention-gemini">Gemini</span>
+              <span class="citation-date">12 mrt 2026</span>
+            </div>
+            <div class="citation-text">Voor een uitgebreide uitleg over zoekwoordenonderzoek verwijzen meerdere bronnen naar de methodologie beschreven door <strong style="color:var(--text)">SEOintel</strong>...</div>
+            <div class="citation-url">→ Prompt: "hoe doe je keyword research"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Otterly FAB -->
+      <button class="tools-fab" id="tools-fab-ai" onclick="openToolsPanelAi()">
+        <span style="font-size:15px">⚡</span>
+        <span>Koppel databronnen</span>
+      </button>
+    </div>
+
+    <!-- Otterly tools panel -->
+    <div id="tools-modal-ai" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.65);" onclick="if(event.target===this)closeToolsPanelAi()">
+      <div class="tools-panel" id="tools-panel-ai">
+        <div class="tools-panel-header">
+          <div>
+            <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;font-weight:300;color:var(--text)">AI visibility koppelen</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">Monitor vermeldingen in ChatGPT, Perplexity & Gemini</div>
+          </div>
+          <button onclick="closeToolsPanelAi()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;line-height:1;">&#x2715;</button>
+        </div>
+        <div class="tool-card" id="tool-otterly">
+          <div class="tool-logo" style="background:linear-gradient(135deg,#6d28d9,#4f46e5)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10" fill="none" stroke="white" stroke-width="2"/><path d="M12 8v4l3 3" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tool-info">
+            <div class="tool-name">Otterly.ai</div>
+            <div class="tool-desc">AI search visibility — ChatGPT, Perplexity, Gemini &amp; Copilot tracking</div>
+          </div>
+          <div class="tool-status" id="status-otterly">
+            <button class="tool-connect-btn" onclick="connectToolAi('otterly')">API key</button>
+          </div>
+        </div>
+        <div id="apikey-form-ai" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:4px;">
+          <div style="font-size:11px;font-family:'SF Mono','Fira Mono',Consolas,monospace;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Otterly.ai API key</div>
+          <div style="display:flex;gap:8px;">
+            <input class="form-input" id="apikey-input-ai" type="password" placeholder="Plak hier je Otterly API key..." style="flex:1">
+            <button class="btn btn-primary" onclick="saveApiKeyAi()" style="white-space:nowrap;padding:10px 14px;font-size:12px;">Verbinden</button>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px;">Nog geen account? <a href="https://otterly.ai" target="_blank" style="color:var(--accent);text-decoration:none;">otterly.ai &#x2192;</a></div>
+        </div>
+        <div class="tools-panel-footer">
+          <div style="font-size:11px;color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;"><span id="connected-count-ai">0</span> van 1 bronnen verbonden</div>
+          <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="closeToolsPanelAi()">Sluiten</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ KEYWORDS ============ -->
+    <div class="page" id="page-keywords">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Keyword rankings</div>
+          <div class="section-sub">Positietracking — dagelijks bijgewerkt</div>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-label">Top 3</div>
+          <div class="metric-val">18</div>
+          <div class="metric-delta delta-up">▲ +3</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Top 10</div>
+          <div class="metric-val">67</div>
+          <div class="metric-delta delta-up">▲ +8</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Top 30</div>
+          <div class="metric-val">143</div>
+          <div class="metric-delta delta-up">▲ +21</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Verliezers</div>
+          <div class="metric-val">9</div>
+          <div class="metric-delta delta-down">▼ −4 vs vorige week</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">Keyword posities</div>
+          <input class="form-input" type="text" placeholder="Zoek keyword..." style="width:200px;padding:6px 10px;font-size:12px">
+        </div>
+        <table class="kw-table">
+          <thead>
+            <tr><th>Keyword</th><th>Positie</th><th>Vorige</th><th>Verschil</th><th>Volume</th><th>Trend</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>seo strategie 2026</td>
+              <td><span class="pos-badge pos-1">2</span></td>
+              <td style="color:var(--muted)">5</td>
+              <td class="trend-up">▲ 3</td>
+              <td>2.400</td>
+              <td><div class="sparkline" style="height:20px">${sparkle([3,5,4,3,3,2,2])}</div></td>
+            </tr>
+            <tr>
+              <td>technische seo checklist</td>
+              <td><span class="pos-badge pos-1">1</span></td>
+              <td style="color:var(--muted)">1</td>
+              <td style="color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;font-size:11px">— 0</td>
+              <td>1.900</td>
+              <td><div class="sparkline" style="height:20px">${sparkle([2,1,1,1,1,1,1])}</div></td>
+            </tr>
+            <tr>
+              <td>keyword onderzoek tools</td>
+              <td><span class="pos-badge pos-top">6</span></td>
+              <td style="color:var(--muted)">9</td>
+              <td class="trend-up">▲ 3</td>
+              <td>3.100</td>
+              <td><div class="sparkline" style="height:20px">${sparkle([9,8,8,7,7,6,6])}</div></td>
+            </tr>
+            <tr>
+              <td>seo bureau nederland</td>
+              <td><span class="pos-badge pos-top">8</span></td>
+              <td style="color:var(--muted)">7</td>
+              <td class="trend-down">▼ 1</td>
+              <td>5.400</td>
+              <td><div class="sparkline" style="height:20px">${sparkle([5,6,7,8,8,8,8])}</div></td>
+            </tr>
+            <tr>
+              <td>linkbuilding strategie</td>
+              <td><span class="pos-badge pos-mid">12</span></td>
+              <td style="color:var(--muted)">11</td>
+              <td class="trend-down">▼ 1</td>
+              <td>1.600</td>
+              <td><div class="sparkline" style="height:20px">${sparkle([10,10,11,11,12,12,12])}</div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Keywords FAB -->
+      <button class="tools-fab" id="tools-fab-keywords" onclick="openToolsPanelKeywords()">
+        <span id="fab-icon-keywords" style="font-size:15px">&#x26A1;</span>
+        <span id="fab-label-keywords">Koppel databronnen</span>
+      </button>
+    </div>
+
+    <!-- Keywords tools panel (reuses traffic connections) -->
+    <div id="tools-modal-keywords" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.65);" onclick="if(event.target===this)closeToolsPanelKeywords()">
+      <div class="tools-panel" id="tools-panel-keywords">
+        <div class="tools-panel-header">
+          <div>
+            <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;font-weight:300;color:var(--text)">Keyword data koppelen</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">Positietracking via bestaande koppelingen</div>
+          </div>
+          <button onclick="closeToolsPanelKeywords()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;line-height:1;">&#x2715;</button>
+        </div>
+
+        <!-- GSC mirror -->
+        <div class="tool-card" id="kw-tool-gsc">
+          <div class="tool-logo" style="background:linear-gradient(135deg,#4285f4,#34a853)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M21 11h-3.17l2.54-2.54-1.41-1.41L15 11h-2V9l3.95-3.95-1.41-1.41L13 6.17V3h-2v3.17L8.46 3.64 7.05 5.05 11 9v2H9L5.05 7.05 3.64 8.46 6.17 11H3v2h3.17L3.64 15.54l1.41 1.41L9 13h2v2l-3.95 3.95 1.41 1.41L11 17.83V21h2v-3.17l2.54 2.54 1.41-1.41L13 15v-2h2l3.95 3.95 1.41-1.41L17.83 13H21v-2z"/></svg>
+          </div>
+          <div class="tool-info">
+            <div class="tool-name">Google Search Console</div>
+            <div class="tool-desc">Basis posities rechtstreeks van Google</div>
+          </div>
+          <div class="tool-status" id="kw-status-gsc">
+            <button class="tool-connect-btn" onclick="connectTool('gsc');closeToolsPanelKeywords();">Inloggen</button>
+          </div>
+        </div>
+
+        <!-- Ahrefs/Semrush mirror -->
+        <div class="tool-card" id="kw-tool-seo3p">
+          <div class="tool-logo" style="background:linear-gradient(135deg,#ff6b35,#f7931e)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div class="tool-info">
+            <div class="tool-name" id="kw-seo3p-name">Ahrefs / Semrush</div>
+            <div class="tool-desc">Dagelijkse rankingtracking, zoekvolume &amp; keyword-moeilijkheid</div>
+          </div>
+          <div class="tool-status" id="kw-status-seo3p">
+            <button class="tool-connect-btn" onclick="connectTool('seo3p');closeToolsPanelKeywords();">API key</button>
+          </div>
+        </div>
+
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-top:4px;">
+          <div style="font-size:12px;color:var(--muted2);line-height:1.6;">&#9432; Stel deze koppelingen in via <strong style="color:var(--text)">Organisch traffic</strong> &#x2192; Koppel databronnen. De status wordt hier automatisch gesynchroniseerd.</div>
+        </div>
+
+        <div class="tools-panel-footer">
+          <div style="font-size:11px;color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;"><span id="connected-count-keywords">0</span> van 2 bronnen verbonden</div>
+          <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="closeToolsPanelKeywords()">Sluiten</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ CONCURRENT ============ -->
+    <div class="page" id="page-competitor">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Concurrentie analyse</div>
+          <div class="section-sub">Vergelijk je positie ten opzichte van concurrenten</div>
+        </div>
+      </div>
+
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-label">Jouw score</div>
+          <div class="metric-val" style="color:var(--accent)">78</div>
+          <div class="metric-delta delta-up">▲ +5 vs vorige maand</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Marktpositie</div>
+          <div class="metric-val">#2</div>
+          <div class="metric-delta delta-up">▲ +1</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Content gap</div>
+          <div class="metric-val">34</div>
+          <div class="metric-delta" style="color:var(--muted2)">kansen gevonden</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Backlink verschil</div>
+          <div class="metric-val">−1,2k</div>
+          <div class="metric-delta delta-up">▲ verschil kleiner</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-head"><div class="card-title">Domain Authority vergelijking</div></div>
+          <div class="chart-wrap">
+            <canvas id="daChart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">Keyword overlap</div></div>
+          <div class="chart-wrap">
+            <canvas id="overlapChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><div class="card-title">Concurrenten overzicht</div></div>
+        <div class="comp-row head">
+          <span>Domein</span><span>DA score</span><span>Keywords</span><span>Links</span><span>AI score</span>
+        </div>
+        <div class="comp-row">
+          <div class="comp-name you">jouwdomein.nl</div>
+          <div><div class="comp-bar"><div class="comp-bar-fill" style="width:78%"></div></div><span style="font-size:11px;color:var(--accent);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-left:8px">78</span></div>
+          <div style="font-size:12px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace">143</div>
+          <div style="font-size:12px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace">4.2k</div>
+          <div style="font-size:12px;color:var(--green);font-family:'SF Mono','Fira Mono',Consolas,monospace">7.4</div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-name">concurrent-a.nl</div>
+          <div><div class="comp-bar"><div class="comp-bar-fill" style="width:85%;background:var(--muted)"></div></div><span style="font-size:11px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-left:8px">85</span></div>
+          <div style="font-size:12px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace">218</div>
+          <div style="font-size:12px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace">9.1k</div>
+          <div style="font-size:12px;color:var(--amber);font-family:'SF Mono','Fira Mono',Consolas,monospace">6.1</div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-name">seo-bureau.nl</div>
+          <div><div class="comp-bar"><div class="comp-bar-fill" style="width:72%;background:var(--muted)"></div></div><span style="font-size:11px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-left:8px">72</span></div>
+          <div style="font-size:12px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace">97</div>
+          <div style="font-size:12px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace">3.4k</div>
+          <div style="font-size:12px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace">5.8</div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-name">digitalmarketing.nl</div>
+          <div><div class="comp-bar"><div class="comp-bar-fill" style="width:61%;background:var(--muted)"></div></div><span style="font-size:11px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-left:8px">61</span></div>
+          <div style="font-size:12px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace">74</div>
+          <div style="font-size:12px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace">2.1k</div>
+          <div style="font-size:12px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace">4.3</div>
+        </div>
+      </div>
+
+      <!-- SimilarWeb FAB -->
+      <button class="tools-fab" id="tools-fab-comp" onclick="openToolsPanelComp()">
+        <span style="font-size:15px">⚡</span>
+        <span>Koppel databronnen</span>
+      </button>
+    </div>
+
+    <!-- SimilarWeb tools panel -->
+    <div id="tools-modal-comp" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.65);" onclick="if(event.target===this)closeToolsPanelComp()">
+      <div class="tools-panel" id="tools-panel-comp">
+        <div class="tools-panel-header">
+          <div>
+            <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:17px;font-weight:300;color:var(--text)">Concurrentie data koppelen</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">Traffic schattingen &amp; marktaandeel van concurrenten</div>
+          </div>
+          <button onclick="closeToolsPanelComp()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;line-height:1;">&#x2715;</button>
+        </div>
+        <div class="tool-card" id="tool-similarweb">
+          <div class="tool-logo" style="background:linear-gradient(135deg,#0085ff,#00c2ff)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 10l3-3 3 3 3-5 2 2"/></svg>
+          </div>
+          <div class="tool-info">
+            <div class="tool-name">SimilarWeb API</div>
+            <div class="tool-desc">Geschat traffic, marktaandeel &amp; kanaalverdeling van concurrenten</div>
+          </div>
+          <div class="tool-status" id="status-similarweb">
+            <button class="tool-connect-btn" onclick="connectToolComp('similarweb')">API key</button>
+          </div>
+        </div>
+        <div id="apikey-form-comp" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:4px;">
+          <div style="font-size:11px;font-family:'SF Mono','Fira Mono',Consolas,monospace;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">SimilarWeb API key</div>
+          <div style="display:flex;gap:8px;">
+            <input class="form-input" id="apikey-input-comp" type="password" placeholder="Plak hier je SimilarWeb API key..." style="flex:1">
+            <button class="btn btn-primary" onclick="saveApiKeyComp()" style="white-space:nowrap;padding:10px 14px;font-size:12px;">Verbinden</button>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px;">Nog geen account? <a href="https://similarweb.com" target="_blank" style="color:var(--accent);text-decoration:none;">similarweb.com &#x2192;</a></div>
+        </div>
+        <div class="tools-panel-footer">
+          <div style="font-size:11px;color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;"><span id="connected-count-comp">0</span> van 1 bronnen verbonden</div>
+          <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="closeToolsPanelComp()">Sluiten</button>
+        </div>
+      </div>
+    </div>
+
+
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+function sparkle(vals) {
+  const max = Math.max(...vals);
+  return vals.map(v => {
+    const h = Math.max(4, Math.round((v / max) * 18));
+    return `<div class="spark-bar" style="height:${h}px;background:var(--accent)"></div>`;
+  }).join('');
+}
+
+document.querySelectorAll('.sparkline').forEach(el => {
+  const vals = el.dataset.vals ? el.dataset.vals.split(',').map(Number) : [3,5,4,6,5,7,8];
+  const max = Math.max(...vals);
+  el.innerHTML = vals.map(v => {
+    const h = Math.max(3, Math.round((v/max)*24));
+    return `<div class="spark-bar" style="height:${h}px"></div>`;
+  }).join('');
+});
+
+const pages = ['content','meta','brief','traffic','ai','keywords','competitor'];
+const titles = {
+  content: 'Content studio', meta: 'Meta generator', brief: 'Content brief',
+  traffic: 'Organisch traffic', ai: 'AI mentions & citations',
+  keywords: 'Keyword rankings', competitor: 'Concurrentie analyse'
+};
+
+function goTo(id) {
+  pages.forEach(p => {
+    document.getElementById('page-'+p).classList.remove('active');
+  });
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('page-title').textContent = titles[id];
+  document.querySelectorAll('.nav-item').forEach(el => {
+    if ((el.getAttribute('onclick')||'').indexOf("'"+id+"'") !== -1) el.classList.add('active');
+  });
+  if (id === 'traffic' && !window.chartsBuilt) buildCharts();
+  if (id === 'ai' && !window.aiChartsBuilt) buildAiCharts();
+  if (id === 'competitor' && !window.compChartsBuilt) buildCompCharts();
+}
+
+function toggleTag(el) {
+  el.classList.toggle('active');
+}
+
+function switchTab(name, el) {
+  document.querySelectorAll('.output-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// Loading animation
+function showLoading(el) {
+  el.innerHTML = '<div style="padding:20px 0;display:flex;gap:6px;align-items:center"><span style="color:var(--muted);font-size:13px;font-style:italic">AI genereert</span><div class="loading-dots"><span></span><span></span><span></span></div></div>';
+}
+
+async function callClaude(prompt) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  const data = await res.json();
+  return data.content?.[0]?.text || 'Er ging iets mis.';
+}
+
+async function generateContent() {
+  const kw = document.getElementById('kw-input').value;
+  const type = document.getElementById('content-type').value;
+  const out = document.getElementById('artikel-output');
+  const seoOut = document.getElementById('seo-output');
+  const structOut = document.getElementById('struct-output');
+  showLoading(out);
+
+  const prompt = `Schrijf een professioneel SEO-geoptimaliseerd ${type} over "${kw}" in het Nederlands.
+Structuur: pakkende intro (2 zinnen), 3 hoofdsecties met H2 koppen, praktische tips, sterke conclusie.
+Gebruik het keyword 3-5x op natuurlijke wijze. Schrijf voor SEO professionals & marketeers.
+Format: gebruik <h3> voor kopjes, <p> voor tekst, <ul><li> voor lijsten, <strong> voor belangrijke termen.`;
+
+  const text = await callClaude(prompt);
+  out.innerHTML = `<div class="ai-response">${text}</div>`;
+
+  const seoPrompt = `Analyseer dit artikel over "${kw}" voor SEO. Geef in JSON terug: {"score":0-100,"keyword_density":"x%","readability":"goed/matig/slecht","suggestions":["tip1","tip2","tip3"],"strengths":["s1","s2"]}. Alleen JSON, geen tekst eromheen.`;
+  const seoRaw = await callClaude(seoPrompt);
+  try {
+    const seo = JSON.parse(seoRaw.replace(/```json?|```/g,'').trim());
+    seoOut.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <div class="metric-label" style="margin-bottom:10px">SEO Score</div>
+          <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:48px;font-weight:300;color:${seo.score>70?'var(--green)':'var(--amber)'}">${seo.score}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">van 100 punten</div>
+        </div>
+        <div>
+          <div class="brief-section-title">Details</div>
+          <div class="brief-item"><span class="brief-bullet">●</span> Keyword density: ${seo.keyword_density}</div>
+          <div class="brief-item"><span class="brief-bullet">●</span> Leesbaarheid: ${seo.readability}</div>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <div class="brief-section-title">Verbeterpunten</div>
+        ${(seo.suggestions||[]).map(s=>`<div class="brief-item"><span class="brief-bullet" style="color:var(--amber)">●</span>${s}</div>`).join('')}
+        <div class="brief-section-title" style="margin-top:12px">Sterktes</div>
+        ${(seo.strengths||[]).map(s=>`<div class="brief-item"><span class="brief-bullet" style="color:var(--green)">●</span>${s}</div>`).join('')}
+      </div>`;
+  } catch(e) { seoOut.innerHTML = `<div class="ai-response">${seoRaw}</div>`; }
+
+  const structPrompt = `Maak een content structuuroverzicht voor "${kw}". Geef JSON: {"title":"H1 titel","meta_desc":"max 160 tekens","sections":[{"h2":"kop","desc":"1 zin beschrijving"}],"internal_links":["link idee 1","link idee 2"],"cta":"call to action tekst"}. Alleen JSON.`;
+  const structRaw = await callClaude(structPrompt);
+  try {
+    const s = JSON.parse(structRaw.replace(/```json?|```/g,'').trim());
+    structOut.innerHTML = `
+      <div class="brief-section">
+        <div class="brief-section-title">Paginatitel (H1)</div>
+        <div style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:18px;color:var(--text);line-height:1.4">${s.title}</div>
+      </div>
+      <div class="brief-section">
+        <div class="brief-section-title">Meta description</div>
+        <div style="font-size:13px;color:var(--muted2);line-height:1.6">${s.meta_desc}</div>
+      </div>
+      <div class="brief-section">
+        <div class="brief-section-title">Secties</div>
+        ${(s.sections||[]).map((sec,i)=>`<div class="brief-item"><span class="brief-bullet" style="color:var(--accent);font-size:10px;font-family:'SF Mono','Fira Mono',Consolas,monospace">H2</span><div><strong>${sec.h2}</strong><div style="font-size:12px;color:var(--muted);margin-top:2px">${sec.desc}</div></div></div>`).join('')}
+      </div>
+      <div class="brief-section">
+        <div class="brief-section-title">Interne link kansen</div>
+        ${(s.internal_links||[]).map(l=>`<div class="brief-item"><span class="brief-bullet">●</span>${l}</div>`).join('')}
+      </div>
+      <div class="brief-section">
+        <div class="brief-section-title">CTA</div>
+        <div style="font-size:13px;color:var(--text)">${s.cta}</div>
+      </div>`;
+  } catch(e) { structOut.innerHTML = `<div class="ai-response">${structRaw}</div>`; }
+}
+
+async function sendChat() {
+  const inp = document.getElementById('chat-in');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  const thread = document.getElementById('chat-thread');
+  thread.innerHTML += `<div class="msg"><div class="msg-avatar user">JIJ</div><div class="msg-body user">${msg}</div></div>`;
+  inp.value = '';
+  const dotDiv = document.createElement('div');
+  dotDiv.className = 'msg';
+  dotDiv.innerHTML = `<div class="msg-avatar ai">AI</div><div class="msg-body"><div class="loading-dots"><span></span><span></span><span></span></div></div>`;
+  thread.appendChild(dotDiv);
+  thread.scrollTop = thread.scrollHeight;
+
+  const kw = document.getElementById('kw-input').value;
+  const reply = await callClaude(`Je helpt iemand bij het schrijven van SEO content over "${kw}". Instructie: "${msg}". Geef een beknopt, professioneel antwoord in het Nederlands.`);
+  dotDiv.innerHTML = `<div class="msg-avatar ai">AI</div><div class="msg-body">${reply}</div>`;
+  thread.scrollTop = thread.scrollHeight;
+}
+
+async function generateMeta() {
+  const kw = document.getElementById('meta-kw').value;
+  const tbody = document.getElementById('meta-tbody');
+  tbody.innerHTML = '<tr><td colspan="4"><div class="loading-dots" style="padding:12px 0"><span></span><span></span><span></span></div></td></tr>';
+
+  const prompt = `Genereer 3 varianten van meta titles EN 3 meta descriptions voor het keyword "${kw}". Geef JSON: {"titles":[{"text":"...","chars":0,"score":"goed/matig"}],"descriptions":[{"text":"...","chars":0,"score":"goed/matig"}]}. Alleen JSON.`;
+  const raw = await callClaude(prompt);
+  try {
+    const data = JSON.parse(raw.replace(/```json?|```/g,'').trim());
+    let rows = '';
+    (data.titles||[]).forEach((t,i) => {
+      rows += `<tr><td style="color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;font-size:11px">Title ${i+1}</td><td>${t.text}</td><td style="font-family:'SF Mono','Fira Mono',Consolas,monospace;font-size:12px">${t.chars||t.text.length}</td><td><span class="meta-score ${t.score==='goed'?'score-good':'score-mid'}">${t.score}</span></td></tr>`;
+    });
+    (data.descriptions||[]).forEach((d,i) => {
+      rows += `<tr><td style="color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;font-size:11px">Desc ${i+1}</td><td style="font-size:12px">${d.text}</td><td style="font-family:'SF Mono','Fira Mono',Consolas,monospace;font-size:12px">${d.chars||d.text.length}</td><td><span class="meta-score ${d.score==='goed'?'score-good':'score-mid'}">${d.score}</span></td></tr>`;
+    });
+    tbody.innerHTML = rows;
+  } catch(e) { tbody.innerHTML = `<tr><td colspan="4" style="color:var(--muted2)">${raw}</td></tr>`; }
+}
+
+async function generateBrief() {
+  const kw = document.getElementById('brief-kw').value;
+  const wrap = document.getElementById('brief-output-wrap');
+  const out = document.getElementById('brief-content');
+  wrap.style.display = 'block';
+  showLoading(out);
+
+  const prompt = `Maak een uitgebreide content brief voor "${kw}" in het Nederlands. Geef JSON: {"doel":"","doelgroep":"","zoekintentie":"informationeel/commercieel/transactioneel","primary_kw":"","secondary_kws":[""],"word_count":"","structuur":[{"type":"H1/H2/H3","tekst":"","doel":""}],"concurrenten":["url 1","url 2"],"bronnen":[""],"interne_links":[""],"tips":[""]}. Alleen JSON.`;
+  const raw = await callClaude(prompt);
+  try {
+    const b = JSON.parse(raw.replace(/```json?|```/g,'').trim());
+    out.innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px">
+        <div><div class="metric-label">Zoekintentie</div><div style="font-size:14px;color:var(--text);margin-top:6px;font-weight:500">${b.zoekintentie||'—'}</div></div>
+        <div><div class="metric-label">Aanbevolen woorden</div><div style="font-size:14px;color:var(--text);margin-top:6px;font-weight:500">${b.word_count||'1500-2000'}</div></div>
+        <div><div class="metric-label">Primair keyword</div><div style="font-size:14px;color:var(--text);margin-top:6px;font-weight:500">${b.primary_kw||kw}</div></div>
+      </div>
+      <div class="brief-section">
+        <div class="brief-section-title">Doel & doelgroep</div>
+        <div class="brief-item"><span class="brief-bullet">●</span>${b.doel}</div>
+        <div class="brief-item"><span class="brief-bullet">●</span>${b.doelgroep}</div>
+      </div>
+      <div class="brief-section">
+        <div class="brief-section-title">Secundaire keywords</div>
+        <div class="tag-row" style="margin:0">${(b.secondary_kws||[]).map(k=>`<span class="tag active">${k}</span>`).join('')}</div>
+      </div>
+      <div class="brief-section">
+        <div class="brief-section-title">Inhoudsstructuur</div>
+        ${(b.structuur||[]).map(s=>`<div class="brief-item"><span style="font-size:10px;font-family:'SF Mono','Fira Mono',Consolas,monospace;color:var(--accent);background:var(--accent-dim);padding:2px 6px;border-radius:4px">${s.type}</span><div style="flex:1"><div style="color:var(--text);font-size:13px">${s.tekst}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${s.doel}</div></div></div>`).join('')}
+      </div>
+      <div class="brief-section">
+        <div class="brief-section-title">Schrijftips</div>
+        ${(b.tips||[]).map(t=>`<div class="brief-item"><span class="brief-bullet" style="color:var(--green)">●</span>${t}</div>`).join('')}
+      </div>`;
+  } catch(e) { out.innerHTML = `<div class="ai-response">${raw}</div>`; }
+}
+
+
+
+// ============ CHARTS ============
+const darkOptions = {
+  plugins: { legend: { labels: { color: '#374151', font: { family: 'Helvetica Neue', size: 11 } } } },
+  scales: {
+    x: { ticks: { color: '#6b7280', font: { family: 'Helvetica Neue', size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+    y: { ticks: { color: '#6b7280', font: { family: 'Helvetica Neue', size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
+  }
+};
+
+function buildCharts() {
+  window.chartsBuilt = true;
+  const months = ['Oct','Nov','Dec','Jan','Feb','Mrt'];
+  new Chart(document.getElementById('trafficChart'), {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [
+        { label: 'Clicks', data: [18200,19400,20100,21800,23200,24871], borderColor: '#c0103a', backgroundColor: 'rgba(192,16,58,0.08)', tension: 0.4, pointRadius: 3, fill: true },
+        { label: 'Impressions /10', data: [24000,25800,27100,28900,30200,31240], borderColor: '#22c987', backgroundColor: 'transparent', tension: 0.4, pointRadius: 3 }
+      ]
+    },
+    options: { ...darkOptions, maintainAspectRatio: false }
+  });
+  new Chart(document.getElementById('deviceChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Desktop', 'Mobiel', 'Tablet'],
+      datasets: [{ data: [54, 38, 8], backgroundColor: ['#c0103a','#22c987','#f5a623'], borderWidth: 0 }]
+    },
+    options: { maintainAspectRatio: false, plugins: { legend: { labels: { color: '#6b7280', font: { family: 'Helvetica Neue', size: 11 } } } } }
+  });
+}
+
+function buildAiCharts() {
+  window.aiChartsBuilt = true;
+  new Chart(document.getElementById('aiPlatformChart'), {
+    type: 'bar',
+    data: {
+      labels: ['ChatGPT', 'Perplexity', 'Gemini', 'Copilot', 'Claude'],
+      datasets: [{ label: 'Mentions', data: [112, 74, 48, 31, 19], backgroundColor: ['#10a37f','#60a5fa','#ea4335','#f5a623','#c0103a'] }]
+    },
+    options: { ...darkOptions, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+  });
+  const w = ['Jan','Feb','Wk1','Wk2','Wk3','Wk4','Wk5','Wk6','Wk7','Wk8','Wk9','Mrt'];
+  new Chart(document.getElementById('aiTrendChart'), {
+    type: 'line',
+    data: {
+      labels: w,
+      datasets: [{ label: 'Mentions', data: [12,15,18,14,22,25,20,28,30,26,32,35], borderColor: '#c0103a', backgroundColor: 'rgba(192,16,58,0.08)', tension: 0.4, fill: true, pointRadius: 2 }]
+    },
+    options: { ...darkOptions, maintainAspectRatio: false }
+  });
+}
+
+// ============ PROFILES ============
+let profiles = [
+  { id: 1, company: 'INDICIA', website: 'indicia.nl', location: 'landelijk', locationDetail: '', competitors: ['concurrent-a.nl','seo-bureau.nl','digitalmarketing.nl'] }
+];
+let activeProfileId = 1;
+let selectedLocation = '';
+let newProfileData = {};
+
+function getInitial(name) {
+  return (name || '?').trim().charAt(0).toUpperCase();
+}
+
+function renderProfileDropdown() {
+  const list = document.getElementById('profile-dropdown-list');
+  list.innerHTML = profiles.map(p => `
+    <button class="profile-dropdown-item ${p.id === activeProfileId ? 'active' : ''}" onclick="switchProfile(${p.id})">
+      <div class="profile-dropdown-avatar" style="background:var(--accent)">${getInitial(p.company)}</div>
+      <div>
+        <div class="profile-dropdown-name">${p.company}</div>
+        <div class="profile-dropdown-domain">${p.website}</div>
+      </div>
+      ${p.id === activeProfileId ? '<span style="margin-left:auto;color:var(--accent);font-size:10px;">●</span>' : ''}
+    </button>
+  `).join('');
+}
+
+function switchProfile(id) {
+  activeProfileId = id;
+  const p = profiles.find(x => x.id === id);
+  document.getElementById('profile-avatar').textContent = getInitial(p.company);
+  document.getElementById('profile-name').textContent = p.company;
+  document.getElementById('profile-url').textContent = p.website;
+  renderProfileDropdown();
+  toggleProfileDropdown(false);
+}
+
+function toggleProfileDropdown(force) {
+  const dd = document.getElementById('profile-dropdown');
+  const chevron = document.getElementById('profile-chevron');
+  const isOpen = dd.classList.contains('open');
+  const shouldOpen = force !== undefined ? force : !isOpen;
+  dd.classList.toggle('open', shouldOpen);
+  chevron.style.transform = shouldOpen ? 'rotate(180deg)' : '';
+  if (shouldOpen) renderProfileDropdown();
+}
+
+document.addEventListener('click', e => {
+  const sw = document.getElementById('profile-switcher');
+  const dd = document.getElementById('profile-dropdown');
+  if (!sw.contains(e.target) && !dd.contains(e.target)) {
+    toggleProfileDropdown(false);
+  }
+});
+
+// ============ PROFILE MODAL ============
+function openProfileModal() {
+  toggleProfileDropdown(false);
+  newProfileData = {};
+  selectedLocation = '';
+  document.getElementById('new-company').value = '';
+  document.getElementById('new-website').value = '';
+  document.getElementById('new-location-detail').value = '';
+  document.getElementById('location-detail-wrap').style.display = 'none';
+  document.querySelectorAll('.loc-option').forEach(o => o.classList.remove('selected'));
+  document.getElementById('competitor-inputs').innerHTML = `
+    <div class="comp-input-row">
+      <span class="comp-num">1</span>
+      <input class="form-input" type="text" placeholder="concurrent.nl" style="flex:1">
+    </div>`;
+  document.getElementById('add-comp-btn').style.display = 'block';
+  showModalStep(1);
+  const modal = document.getElementById('profile-modal');
+  modal.style.display = 'flex';
+}
+
+function closeProfileModal() {
+  document.getElementById('profile-modal').style.display = 'none';
+}
+
+function showModalStep(n) {
+  [1,2,3,4].forEach(i => {
+    document.getElementById('modal-step-'+i).style.display = i === n ? 'block' : 'none';
+    const dot = document.querySelector(`.modal-step[data-step="${i}"]`);
+    if (dot) {
+      dot.classList.remove('active','done');
+      if (i === n) dot.classList.add('active');
+      else if (i < n) dot.classList.add('done');
+    }
+  });
+}
+
+function modalNext(step) {
+  if (step === 1) {
+    const co = document.getElementById('new-company').value.trim();
+    const web = document.getElementById('new-website').value.trim();
+    if (!co || !web) { alert('Vul bedrijfsnaam en website in.'); return; }
+    newProfileData.company = co;
+    newProfileData.website = web;
+    showModalStep(2);
+  } else if (step === 2) {
+    if (!selectedLocation) { alert('Kies een locatiefocus.'); return; }
+    newProfileData.location = selectedLocation;
+    newProfileData.locationDetail = document.getElementById('new-location-detail').value.trim();
+    showModalStep(3);
+  } else if (step === 3) {
+    const inputs = document.querySelectorAll('#competitor-inputs input');
+    newProfileData.competitors = Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
+    buildModalSummary();
+    showModalStep(4);
+  }
+}
+
+function modalBack(step) {
+  showModalStep(step - 1);
+}
+
+function selectLocation(el, val) {
+  selectedLocation = val;
+  document.querySelectorAll('.loc-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  const wrap = document.getElementById('location-detail-wrap');
+  const label = document.getElementById('location-detail-label');
+  if (val === 'regionaal') {
+    wrap.style.display = 'block';
+    label.textContent = 'Regio / Provincie';
+    document.getElementById('new-location-detail').placeholder = 'bijv. Noord-Holland';
+  } else if (val === 'plaats') {
+    wrap.style.display = 'block';
+    label.textContent = 'Stad / Gemeente';
+    document.getElementById('new-location-detail').placeholder = 'bijv. Amsterdam';
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+
+function addCompetitorField() {
+  const container = document.getElementById('competitor-inputs');
+  const count = container.querySelectorAll('.comp-input-row').length;
+  if (count >= 5) return;
+  const row = document.createElement('div');
+  row.className = 'comp-input-row';
+  row.innerHTML = `<span class="comp-num">${count + 1}</span><input class="form-input" type="text" placeholder="concurrent.nl" style="flex:1">`;
+  container.appendChild(row);
+  if (count + 1 >= 5) document.getElementById('add-comp-btn').style.display = 'none';
+}
+
+function buildModalSummary() {
+  const locLabels = { landelijk: 'Landelijk', regionaal: 'Regionaal', plaats: 'Plaatselijk' };
+  const locStr = locLabels[newProfileData.location] + (newProfileData.locationDetail ? ` — ${newProfileData.locationDetail}` : '');
+  const compStr = newProfileData.competitors.length ? newProfileData.competitors.join(', ') : '—';
+  document.getElementById('modal-summary').innerHTML = `
+    <div style="display:grid;gap:10px;">
+      <div><span style="color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.8px;">Bedrijf</span><div style="color:var(--text);margin-top:3px">${newProfileData.company}</div></div>
+      <div><span style="color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.8px;">Website</span><div style="color:var(--text);margin-top:3px">${newProfileData.website}</div></div>
+      <div><span style="color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.8px;">Locatiefocus</span><div style="color:var(--text);margin-top:3px">${locStr}</div></div>
+      <div><span style="color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.8px;">Concurrenten</span><div style="color:var(--text);margin-top:3px">${compStr}</div></div>
+    </div>`;
+}
+
+function saveProfile() {
+  const id = Date.now();
+  profiles.push({ id, ...newProfileData });
+  closeProfileModal();
+  switchProfile(id);
+}
+
+// Init
+renderProfileDropdown();
+
+// ============ BRANDING ============
+function toggleBranding() {
+  const panel = document.getElementById('branding-panel');
+  const arrow = document.getElementById('branding-arrow');
+  panel.classList.toggle('open');
+  arrow.style.transform = panel.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+function darkenHex(hex, amount=30) {
+  let r = Math.max(0, parseInt(hex.slice(1,3),16) - amount);
+  let g = Math.max(0, parseInt(hex.slice(3,5),16) - amount);
+  let b = Math.max(0, parseInt(hex.slice(5,7),16) - amount);
+  return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
+}
+
+function selectSwatch(el) {
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  const color = el.dataset.color;
+  document.getElementById('color-picker').value = color;
+  document.getElementById('color-hex').value = color;
+}
+
+function onColorPick(val) {
+  document.getElementById('color-hex').value = val;
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+}
+
+function onHexInput(val) {
+  if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+    document.getElementById('color-picker').value = val;
+    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+  }
+}
+
+let currentLogoDataUrl = null;
+
+function handleLogoUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    currentLogoDataUrl = e.target.result;
+    // Update preview
+    const preview = document.getElementById('logo-preview');
+    preview.innerHTML = `<img src="${currentLogoDataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">`;
+    // Show clear button, hide letter input label
+    document.getElementById('clear-logo-btn').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function updateLogoPreview() {
+  if (currentLogoDataUrl) return; // photo takes priority
+  const letter = (document.getElementById('brand-letter').value.trim() || 'I').toUpperCase();
+  const preview = document.getElementById('logo-preview');
+  preview.textContent = letter;
+}
+
+function clearLogoPhoto() {
+  currentLogoDataUrl = null;
+  document.getElementById('logo-upload').value = '';
+  document.getElementById('clear-logo-btn').style.display = 'none';
+  const letter = (document.getElementById('brand-letter').value.trim() || 'I').toUpperCase();
+  const preview = document.getElementById('logo-preview');
+  preview.innerHTML = letter;
+}
+
+function applyBranding() {
+  const name = document.getElementById('brand-name').value.trim() || 'SEOintel';
+  const letter = (document.getElementById('brand-letter').value.trim() || 'I').toUpperCase();
+  const color = document.getElementById('color-hex').value.trim();
+  const validColor = /^#[0-9a-fA-F]{6}$/.test(color) ? color : '#c0103a';
+  const darker = darkenHex(validColor, 28);
+  const rgb = hexToRgb(validColor);
+
+  // Update CSS vars
+  const root = document.documentElement;
+  root.style.setProperty('--accent', validColor);
+  root.style.setProperty('--accent2', darker);
+  root.style.setProperty('--accent-dim', `rgba(${rgb},0.12)`);
+
+  // Update sidebar logo icon
+  const logoIcon = document.querySelector('.logo-icon');
+  if (currentLogoDataUrl) {
+    logoIcon.innerHTML = `<img src="${currentLogoDataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
+  } else {
+    logoIcon.textContent = letter;
+    logoIcon.style.background = '';
+  }
+
+  // Update profile avatar in switcher
+  const profileAvatar = document.getElementById('profile-avatar');
+  if (currentLogoDataUrl) {
+    profileAvatar.innerHTML = `<img src="${currentLogoDataUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`;
+  } else {
+    profileAvatar.textContent = letter;
+  }
+
+  // Update logo text
+  const logoText = document.querySelector('.logo-text');
+  const split = Math.max(1, Math.floor(name.length / 2));
+  logoText.innerHTML = name.slice(0, split) + '<span>' + name.slice(split) + '</span>';
+
+  // Flash save button
+  const btn = document.querySelector('.branding-save');
+  btn.textContent = '✓ Toegepast';
+  btn.style.background = 'var(--green)';
+  setTimeout(() => { btn.textContent = '✦ Toepassen'; btn.style.background = ''; }, 1800);
+}
+
+function buildCompCharts() {
+  window.compChartsBuilt = true;
+  new Chart(document.getElementById('daChart'), {
+    type: 'bar',
+    data: {
+      labels: ['jouwdomein', 'concurrent-a', 'seo-bureau', 'digitalmark.'],
+      datasets: [{ data: [78, 85, 72, 61], backgroundColor: ['#c0103a','#9ca3af','#9ca3af','#9ca3af'] }]
+    },
+    options: { ...darkOptions, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } } }
+  });
+  new Chart(document.getElementById('overlapChart'), {
+    type: 'radar',
+    data: {
+      labels: ['Technisch SEO', 'Content', 'Linkbuilding', 'Local SEO', 'AI SEO', 'E-commerce'],
+      datasets: [
+        { label: 'Jij', data: [80, 70, 60, 55, 85, 40], borderColor: '#c0103a', backgroundColor: 'rgba(192,16,58,0.15)', pointRadius: 3 },
+        { label: 'Concurrent A', data: [90, 85, 80, 40, 60, 70], borderColor: '#6b7280', backgroundColor: 'rgba(107,114,128,0.1)', pointRadius: 3 }
+      ]
+    },
+    options: { maintainAspectRatio: false, plugins: { legend: { labels: { color: '#374151', font: { family: 'Helvetica Neue', size: 11 } } } }, scales: { r: { ticks: { color: '#6b7280', font: { size: 10 }, backdropColor: 'rgba(255,255,255,0)' }, grid: { color: 'rgba(0,0,0,0.05)' }, pointLabels: { color: '#6b7280', font: { size: 11 } } } } }
+  });
+}
+
+// ============ TOOLS CONNECT ============
+const toolConnected = { ga4: false, gsc: false, seo3p: false };
+let currentOAuthTool = null;
+let selected3p = 'ahrefs';
+
+function openToolsPanel() {
+  document.getElementById('tools-modal').style.display = 'block';
+  setTimeout(() => document.getElementById('tools-panel').classList.add('open'), 10);
+  updateConnectedCount();
+}
+
+function closeToolsPanel() {
+  document.getElementById('tools-panel').classList.remove('open');
+  setTimeout(() => {
+    document.getElementById('tools-modal').style.display = 'none';
+    document.getElementById('apikey-form').style.display = 'none';
+  }, 320);
+}
+
+function handleToolsOverlayClick(e) {
+  if (e.target === document.getElementById('tools-modal')) closeToolsPanel();
+}
+
+function connectTool(tool) {
+  if (tool === 'seo3p') {
+    const form = document.getElementById('apikey-form');
+    const label = document.getElementById('apikey-label');
+    label.textContent = (selected3p === 'ahrefs' ? 'Ahrefs' : 'Semrush') + ' API key';
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    return;
+  }
+  currentOAuthTool = tool;
+  const subtitle = document.getElementById('oauth-subtitle');
+  subtitle.textContent = tool === 'ga4'
+    ? 'Selecteer het account met toegang tot Google Analytics 4'
+    : 'Selecteer het account met toegang tot Search Console';
+  document.getElementById('oauth-popup').classList.add('open');
+}
+
+function selectOAuthAccount(email) {
+  document.getElementById('oauth-popup').classList.remove('open');
+  if (!currentOAuthTool) return;
+  setTimeout(() => {
+    markToolConnected(currentOAuthTool, email === 'ander' ? 'Verbonden' : email);
+    currentOAuthTool = null;
+  }, 200);
+}
+
+function closeOAuth() {
+  document.getElementById('oauth-popup').classList.remove('open');
+  currentOAuthTool = null;
+}
+
+function saveApiKey() {
+  const val = document.getElementById('apikey-input').value.trim();
+  if (!val) return;
+  document.getElementById('apikey-form').style.display = 'none';
+  document.getElementById('apikey-input').value = '';
+  markToolConnected('seo3p', selected3p === 'ahrefs' ? 'Ahrefs' : 'Semrush');
+}
+
+function markToolConnected(tool, label) {
+  toolConnected[tool] = true;
+  connectedTools[tool] = true;
+  const statusEl = document.getElementById('status-' + tool);
+  if (statusEl) statusEl.innerHTML = `<div class="tool-connected-badge"><span style="font-size:8px">●</span>${label}</div>`;
+  const cardEl = document.getElementById('tool-' + tool);
+  if (cardEl) cardEl.classList.add('connected');
+  updateConnectedCount();
+  updateAllFabs();
+}
+
+function updateConnectedCount() {
+  const n = Object.values(toolConnected).filter(Boolean).length;
+  document.getElementById('connected-count').textContent = n;
+}
+
+function selectSeo3p(choice) {
+  selected3p = choice;
+  document.getElementById('tab-ahrefs').classList.toggle('active', choice === 'ahrefs');
+  document.getElementById('tab-semrush').classList.toggle('active', choice === 'semrush');
+  document.getElementById('apikey-label').textContent = (choice === 'ahrefs' ? 'Ahrefs' : 'Semrush') + ' API key';
+}
+
+// ============ FAB STATE MANAGEMENT ============
+// Tracks how many tools needed per page and current connected count
+const fabConfig = {
+  traffic:    { fabId: 'tools-fab',          total: 3, tools: ['ga4','gsc','seo3p'] },
+  ai:         { fabId: 'tools-fab-ai',       total: 1, tools: ['otterly'] },
+  competitor: { fabId: 'tools-fab-comp',     total: 1, tools: ['similarweb'] },
+  keywords:   { fabId: 'tools-fab-keywords', total: 2, tools: ['gsc','seo3p'] }
+};
+
+// Master connection state — single source of truth
+const connectedTools = {
+  ga4: false, gsc: false, seo3p: false,
+  otterly: false, similarweb: false
+};
+
+function updateAllFabs() {
+  Object.entries(fabConfig).forEach(([page, cfg]) => {
+    const fab = document.getElementById(cfg.fabId);
+    if (!fab) return;
+    const connectedCount = cfg.tools.filter(t => connectedTools[t]).length;
+    const allConnected = connectedCount === cfg.total;
+    const iconEl = fab.querySelector('[id^="fab-icon"]');
+    const labelEl = fab.querySelector('[id^="fab-label"]');
+
+    if (allConnected) {
+      fab.style.borderColor = 'rgba(34,201,135,0.5)';
+      fab.style.color = 'var(--green)';
+      fab.style.background = 'rgba(34,201,135,0.08)';
+      if (iconEl) iconEl.textContent = '✓';
+      if (labelEl) labelEl.textContent = 'Alle bronnen verbonden';
+    } else if (connectedCount > 0) {
+      fab.style.borderColor = 'rgba(245,166,35,0.4)';
+      fab.style.color = 'var(--amber)';
+      fab.style.background = 'rgba(245,166,35,0.06)';
+      if (iconEl) iconEl.textContent = '⚡';
+      if (labelEl) labelEl.textContent = connectedCount + '/' + cfg.total + ' bronnen verbonden';
+    } else {
+      fab.style.borderColor = '';
+      fab.style.color = '';
+      fab.style.background = '';
+      if (iconEl) iconEl.textContent = '⚡';
+      if (labelEl) labelEl.textContent = 'Koppel databronnen';
+    }
+
+    // Update keywords mirror panel statuses
+    if (page === 'keywords' || cfg.tools.includes('gsc') || cfg.tools.includes('seo3p')) {
+      syncKeywordsMirror();
+    }
+  });
+}
+
+function syncKeywordsMirror() {
+  // Mirror GSC status in keywords panel
+  const kwGsc = document.getElementById('kw-status-gsc');
+  if (kwGsc) {
+    if (connectedTools.gsc) {
+      kwGsc.innerHTML = '<div class="tool-connected-badge"><span style="font-size:8px">●</span>Verbonden</div>';
+      document.getElementById('kw-tool-gsc').classList.add('connected');
+    } else {
+      kwGsc.innerHTML = '<button class="tool-connect-btn" onclick="connectTool(\'gsc\');closeToolsPanelKeywords();">Inloggen</button>';
+      document.getElementById('kw-tool-gsc').classList.remove('connected');
+    }
+  }
+  // Mirror seo3p status in keywords panel
+  const kwSeo = document.getElementById('kw-status-seo3p');
+  if (kwSeo) {
+    if (connectedTools.seo3p) {
+      const name = selected3p === 'ahrefs' ? 'Ahrefs' : 'Semrush';
+      kwSeo.innerHTML = '<div class="tool-connected-badge"><span style="font-size:8px">●</span>' + name + '</div>';
+      document.getElementById('kw-tool-seo3p').classList.add('connected');
+      document.getElementById('kw-seo3p-name').textContent = name;
+    } else {
+      kwSeo.innerHTML = '<button class="tool-connect-btn" onclick="connectTool(\'seo3p\');closeToolsPanelKeywords();">API key</button>';
+      document.getElementById('kw-tool-seo3p').classList.remove('connected');
+    }
+  }
+  // Update keywords connected count
+  const kwCount = document.getElementById('connected-count-keywords');
+  if (kwCount) {
+    const n = [connectedTools.gsc, connectedTools.seo3p].filter(Boolean).length;
+    kwCount.textContent = n;
+  }
+}
+
+// ============ OTTERLY TOOLS ============
+function openToolsPanelAi() {
+  document.getElementById('tools-modal-ai').style.display = 'block';
+  setTimeout(() => document.getElementById('tools-panel-ai').classList.add('open'), 10);
+}
+function closeToolsPanelAi() {
+  document.getElementById('tools-panel-ai').classList.remove('open');
+  setTimeout(() => {
+    document.getElementById('tools-modal-ai').style.display = 'none';
+    document.getElementById('apikey-form-ai').style.display = 'none';
+  }, 320);
+}
+function connectToolAi(tool) {
+  const form = document.getElementById('apikey-form-ai');
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+function saveApiKeyAi() {
+  const val = document.getElementById('apikey-input-ai').value.trim();
+  if (!val) return;
+  document.getElementById('apikey-form-ai').style.display = 'none';
+  document.getElementById('apikey-input-ai').value = '';
+  connectedTools['otterly'] = true;
+  document.getElementById('status-otterly').innerHTML = '<div class="tool-connected-badge"><span style="font-size:8px">●</span>Otterly.ai</div>';
+  document.getElementById('tool-otterly').classList.add('connected');
+  document.getElementById('connected-count-ai').textContent = '1';
+  updateAllFabs();
+}
+
+// ============ SIMILARWEB TOOLS ============
+function openToolsPanelComp() {
+  document.getElementById('tools-modal-comp').style.display = 'block';
+  setTimeout(() => document.getElementById('tools-panel-comp').classList.add('open'), 10);
+}
+function closeToolsPanelComp() {
+  document.getElementById('tools-panel-comp').classList.remove('open');
+  setTimeout(() => {
+    document.getElementById('tools-modal-comp').style.display = 'none';
+    document.getElementById('apikey-form-comp').style.display = 'none';
+  }, 320);
+}
+function connectToolComp(tool) {
+  const form = document.getElementById('apikey-form-comp');
+  form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+function saveApiKeyComp() {
+  const val = document.getElementById('apikey-input-comp').value.trim();
+  if (!val) return;
+  document.getElementById('apikey-form-comp').style.display = 'none';
+  document.getElementById('apikey-input-comp').value = '';
+  connectedTools['similarweb'] = true;
+  document.getElementById('status-similarweb').innerHTML = '<div class="tool-connected-badge"><span style="font-size:8px">●</span>SimilarWeb</div>';
+  document.getElementById('tool-similarweb').classList.add('connected');
+  document.getElementById('connected-count-comp').textContent = '1';
+  updateAllFabs();
+}
+
+// ============ KEYWORDS PANEL ============
+function openToolsPanelKeywords() {
+  syncKeywordsMirror();
+  document.getElementById('tools-modal-keywords').style.display = 'block';
+  setTimeout(() => document.getElementById('tools-panel-keywords').classList.add('open'), 10);
+}
+function closeToolsPanelKeywords() {
+  document.getElementById('tools-panel-keywords').classList.remove('open');
+  setTimeout(() => document.getElementById('tools-modal-keywords').style.display = 'none', 320);
+}
+
+// Show correct FAB per page — wrap goTo
+(function() {
+  const _goTo = goTo;
+  const fabMap = {
+    traffic: 'tools-fab',
+    ai: 'tools-fab-ai',
+    competitor: 'tools-fab-comp',
+    keywords: 'tools-fab-keywords'
+  };
+  goTo = function(id) {
+    _goTo(id);
+    Object.values(fabMap).forEach(fabId => {
+      const el = document.getElementById(fabId);
+      if (el) el.style.display = 'none';
+    });
+    if (fabMap[id]) {
+      const el = document.getElementById(fabMap[id]);
+      if (el) el.style.display = 'flex';
+    }
+  };
+})();
+</script>
+  <!-- Google OAuth mock popup -->
+  <div class="oauth-popup" id="oauth-popup">
+    <div class="oauth-google-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      <span style="font-size:14px;color:#e8eaed;font-weight:500">Inloggen met Google</span>
+    </div>
+    <div style="font-size:13px;color:#9aa0a6;margin-bottom:16px;" id="oauth-subtitle">Kies een account om te verbinden</div>
+    <div id="oauth-accounts">
+      <div class="oauth-account-item" onclick="selectOAuthAccount('jan@bedrijf.nl')">
+        <div class="oauth-avatar" style="background:#4285f4">J</div>
+        <div>
+          <div style="font-size:13px;color:#e8eaed;font-weight:500">Jan de Vries</div>
+          <div style="font-size:11px;color:#9aa0a6;"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6f050e012f0d0a0b1d060509410103">[email&#160;protected]</a></div>
+        </div>
+      </div>
+      <div class="oauth-account-item" onclick="selectOAuthAccount('marketing@indicia.nl')">
+        <div class="oauth-avatar" style="background:#c0103a">M</div>
+        <div>
+          <div style="font-size:13px;color:#e8eaed;font-weight:500">Marketing INDICIA</div>
+          <div style="font-size:11px;color:#9aa0a6;"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3a575b48515f4e53545d7a53545e5359535b145456">[email&#160;protected]</a></div>
+        </div>
+      </div>
+      <div class="oauth-account-item" onclick="selectOAuthAccount('ander')" style="justify-content:center;">
+        <div style="font-size:12px;color:#8ab4f8;">+ Ander account gebruiken</div>
+      </div>
+    </div>
+    <button onclick="cl
