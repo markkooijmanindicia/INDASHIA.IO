@@ -39,10 +39,10 @@
     min-height: 100vh;
     font-size: 14px;
   }
- 
+
   /* Layout */
   .shell { display: flex; min-height: 100vh; }
- 
+
   /* Sidebar */
   .sidebar {
     width: 220px;
@@ -86,7 +86,7 @@
     letter-spacing: -0.2px;
   }
   .logo-text span { color: var(--accent); }
- 
+
   .nav { padding: 12px 10px; flex: 1; }
   .nav-section { margin-bottom: 20px; }
   .nav-label {
@@ -118,7 +118,7 @@
   .nav-item:hover { background: var(--bg3); color: var(--text); }
   .nav-item.active { background: var(--accent-dim); color: var(--accent); }
   .nav-icon { font-size: 15px; width: 18px; text-align: center; flex-shrink: 0; }
- 
+
   /* Main */
   .main { flex: 1; overflow: auto; }
   .topbar {
@@ -150,10 +150,10 @@
     color: var(--muted2);
   }
   .badge.live { color: var(--green); border-color: rgba(5,150,105,0.3); background: var(--green-dim); }
- 
+
   .page { padding: 24px 28px; display: none; }
   .page.active { display: block; }
- 
+
   /* Cards / panels */
   .card {
     background: var(--bg2);
@@ -176,7 +176,7 @@
     letter-spacing: -0.2px;
   }
   .card-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
- 
+
   /* Metric row */
   .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
   .metric-card {
@@ -198,14 +198,14 @@
   }
   .delta-up { color: var(--green); }
   .delta-down { color: var(--red); }
- 
+
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
   .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px; }
- 
+
   /* ============ CONTENT CREATION ============ */
   .content-layout { display: grid; grid-template-columns: 340px 1fr; gap: 18px; }
   .input-panel { display: flex; flex-direction: column; gap: 14px; }
- 
+
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-label { font-size: 11px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
   .form-input, .form-select, .form-textarea {
@@ -223,7 +223,7 @@
   .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); }
   .form-textarea { resize: vertical; min-height: 80px; }
   .form-select option { background: var(--bg3); }
- 
+
   .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
   .tag {
     font-size: 11px;
@@ -237,7 +237,7 @@
     transition: all 0.15s;
   }
   .tag:hover, .tag.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(192,16,58,0.4); }
- 
+
   .btn {
     padding: 10px 18px;
     border-radius: 8px;
@@ -254,7 +254,7 @@
   .btn-secondary { background: var(--bg3); color: var(--muted2); border: 1px solid var(--border2); }
   .btn-secondary:hover { color: var(--text); border-color: var(--border2); background: var(--bg4); }
   .btn-full { width: 100%; }
- 
+
   /* Output panel */
   .output-panel { display: flex; flex-direction: column; gap: 0; }
   .output-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 0; }
@@ -270,7 +270,7 @@
   }
   .output-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
   .output-tab:hover { color: var(--text); }
- 
+
   .output-content {
     background: var(--bg2);
     border: 1px solid var(--border);
@@ -282,7 +282,7 @@
   }
   .tab-pane { display: none; }
   .tab-pane.active { display: block; }
- 
+
   .ai-response {
     line-height: 1.75;
     color: var(--muted2);
@@ -300,7 +300,7 @@
   .ai-response ul { padding-left: 18px; }
   .ai-response li { margin-bottom: 5px; }
   .ai-response strong { color: var(--text); font-weight: 500; }
- 
+
   .loading-dots span {
     display: inline-block;
     width: 6px; height: 6px;
@@ -315,7 +315,7 @@
     0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
     40% { transform: translateY(-6px); opacity: 1; }
   }
- 
+
   /* Chat messages */
   .chat-thread { display: flex; flex-direction: column; gap: 14px; }
   .msg { display: flex; gap: 10px; align-items: flex-start; }
@@ -329,7 +329,7 @@
   .msg-avatar.user { background: var(--bg4); color: var(--muted2); border: 1px solid var(--border2); }
   .msg-body { font-size: 13px; line-height: 1.65; color: var(--muted2); flex: 1; }
   .msg-body.user { color: var(--text); }
- 
+
   .chat-input-row { display: flex; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
   .chat-input {
     flex: 1; background: var(--bg3); border: 1px solid var(--border2);
@@ -337,7 +337,7 @@
     font-size: 13px; padding: 10px 14px; outline: none;
   }
   .chat-input:focus { border-color: var(--accent); }
- 
+
   /* Meta table */
   .meta-table { width: 100%; border-collapse: collapse; }
   .meta-table th {
@@ -353,7 +353,7 @@
   }
   .score-good { background: var(--green-dim); color: var(--green); }
   .score-mid { background: var(--amber-dim); color: var(--amber); }
- 
+
   /* Brief */
   .brief-section { margin-bottom: 20px; }
   .brief-section-title {
@@ -366,11 +366,11 @@
     font-size: 13px; color: var(--muted2); line-height: 1.5;
   }
   .brief-bullet { color: var(--accent); margin-top: 2px; font-size: 8px; flex-shrink: 0; }
- 
+
   /* ============ ANALYTICS ============ */
   .chart-wrap { position: relative; height: 220px; }
   .chart-wrap-sm { position: relative; height: 170px; }
- 
+
   .kw-table { width: 100%; border-collapse: collapse; }
   .kw-table th {
     text-align: left; padding: 8px 12px; font-size: 10px;
@@ -388,10 +388,10 @@
   .pos-1 { background: var(--green-dim); color: var(--green); }
   .pos-top { background: var(--amber-dim); color: var(--amber); }
   .pos-mid { background: var(--bg4); color: var(--muted2); }
- 
+
   .trend-up { color: var(--green); font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; font-size: 11px; }
   .trend-down { color: var(--red); font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; font-size: 11px; }
- 
+
   .citation-list { display: flex; flex-direction: column; gap: 10px; }
   .citation-item {
     background: var(--bg3); border: 1px solid var(--border);
@@ -406,7 +406,7 @@
   .citation-date { font-size: 11px; color: var(--muted); margin-left: auto; }
   .citation-text { font-size: 13px; color: var(--muted2); line-height: 1.6; }
   .citation-url { font-size: 11px; color: var(--accent); margin-top: 6px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace; }
- 
+
   .mention-source {
     font-size: 11px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
     padding: 2px 8px; border-radius: 20px; border: 1px solid;
@@ -414,7 +414,7 @@
   .mention-gpt { background: rgba(16,163,127,0.1); color: #10a37f; border-color: rgba(16,163,127,0.3); }
   .mention-perplexity { background: var(--blue-dim); color: var(--blue); border-color: rgba(96,165,250,0.3); }
   .mention-gemini { background: rgba(234,67,53,0.1); color: #ea4335; border-color: rgba(234,67,53,0.2); }
- 
+
   /* Competitor */
   .comp-row { display: grid; grid-template-columns: 160px 1fr 60px 60px 70px; gap: 0; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
   .comp-row:last-child { border-bottom: none; }
@@ -424,11 +424,11 @@
   .comp-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.6s ease; }
   .comp-name { font-weight: 500; color: var(--text); }
   .comp-name.you { color: var(--accent); }
- 
+
   .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
   .section-title { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 20px; font-weight: 300; }
   .section-sub { font-size: 12px; color: var(--muted); }
- 
+
   .period-tabs { display: flex; gap: 4px; }
   .period-tab {
     padding: 5px 12px; border-radius: 6px; font-size: 11px;
@@ -437,13 +437,13 @@
     background: none; transition: all 0.15s;
   }
   .period-tab.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(192,16,58,0.3); }
- 
- 
- 
+
+
+
   .sparkline { display: flex; align-items: flex-end; gap: 3px; height: 30px; }
   .spark-bar { width: 5px; border-radius: 2px 2px 0 0; background: var(--accent); opacity: 0.5; flex-shrink: 0; transition: opacity 0.15s; }
   .spark-bar:hover { opacity: 1; }
- 
+
   /* ============ PROFILE SWITCHER ============ */
   .profile-switcher {
     padding: 14px 16px;
@@ -513,7 +513,7 @@
     cursor: pointer; transition: background 0.12s; text-align: left; width: 100%;
   }
   .profile-add-btn:hover { background: var(--bg4); }
- 
+
   /* ============ MODAL ============ */
   .modal-step {
     width: 24px; height: 24px; border-radius: 50%;
@@ -547,7 +547,7 @@
     font-size: 10px; font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
     color: var(--muted); flex-shrink: 0;
   }
- 
+
   /* ============ BRANDING PANEL ============ */
   .branding-toggle {
     margin: 0 10px 12px;
@@ -638,7 +638,7 @@
   }
   #page-traffic.active ~ * .tools-fab,
   .tools-fab.visible { display: flex; }
- 
+
   .tools-panel {
     position: fixed;
     bottom: 0; right: 0;
@@ -654,7 +654,7 @@
     transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
   }
   .tools-panel.open { transform: translateY(0); }
- 
+
   .tools-panel-header {
     display: flex;
     align-items: flex-start;
@@ -721,7 +721,7 @@
     padding-top: 16px;
     border-top: 1px solid var(--border);
   }
- 
+
   /* Google OAuth mock popup */
   .oauth-popup {
     position: fixed;
@@ -759,7 +759,7 @@
 </head>
 <body>
 <div class="shell">
- 
+
   <!-- PROFILE MODAL OVERLAY -->
   <div id="profile-modal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;">
     <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:480px;max-width:95vw;max-height:90vh;overflow-y:auto;padding:28px;">
@@ -770,7 +770,7 @@
         </div>
         <button onclick="closeProfileModal()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;">✕</button>
       </div>
- 
+
       <!-- Step indicator -->
       <div style="display:flex;gap:6px;margin-bottom:28px;" id="modal-steps">
         <div class="modal-step active" data-step="1">1</div>
@@ -781,7 +781,7 @@
         <div style="flex:1;height:1px;background:var(--border);margin:auto;"></div>
         <div class="modal-step" data-step="4">4</div>
       </div>
- 
+
       <!-- Step 1: Bedrijfsnaam & Website -->
       <div id="modal-step-1" class="modal-step-pane">
         <div style="font-size:13px;color:var(--accent);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.8px;">Stap 1 — Bedrijf</div>
@@ -797,7 +797,7 @@
           <button class="btn btn-primary" onclick="modalNext(1)">Volgende →</button>
         </div>
       </div>
- 
+
       <!-- Step 2: Locatie focus -->
       <div id="modal-step-2" class="modal-step-pane" style="display:none">
         <div style="font-size:13px;color:var(--accent);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.8px;">Stap 2 — Locatiefocus</div>
@@ -834,7 +834,7 @@
           <button class="btn btn-primary" onclick="modalNext(2)">Volgende →</button>
         </div>
       </div>
- 
+
       <!-- Step 3: Concurrenten -->
       <div id="modal-step-3" class="modal-step-pane" style="display:none">
         <div style="font-size:13px;color:var(--accent);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.8px;">Stap 3 — Concurrenten</div>
@@ -851,7 +851,7 @@
           <button class="btn btn-primary" onclick="modalNext(3)">Volgende →</button>
         </div>
       </div>
- 
+
       <!-- Step 4: Bevestiging -->
       <div id="modal-step-4" class="modal-step-pane" style="display:none">
         <div style="font-size:13px;color:var(--accent);font-family:'SF Mono','Fira Mono',Consolas,monospace;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.8px;">Stap 4 — Bevestigen</div>
@@ -863,7 +863,7 @@
       </div>
     </div>
   </div>
- 
+
   <!-- SIDEBAR -->
   <nav class="sidebar">
     <!-- Profile switcher -->
@@ -875,7 +875,7 @@
       </div>
       <span class="profile-chevron" id="profile-chevron">▾</span>
     </div>
- 
+
     <!-- Profile dropdown -->
     <div class="profile-dropdown" id="profile-dropdown">
       <div class="profile-dropdown-list" id="profile-dropdown-list"></div>
@@ -914,7 +914,7 @@
         </button>
       </div>
     </div>
- 
+
     <!-- Branding panel at bottom -->
     <div style="margin-top:auto; border-top: 1px solid var(--border); padding-top: 10px;">
       <button class="branding-toggle" onclick="toggleBranding()">
@@ -967,7 +967,7 @@
       </div>
     </div>
   </nav>
- 
+
   <!-- MAIN -->
   <div class="main">
     <div class="topbar">
@@ -984,11 +984,11 @@
         <span class="badge">mrt 2026</span>
       </div>
     </div>
- 
+
     <!-- ============ CONTENT STUDIO ============ -->
     <div class="page active" id="page-content">
       <div class="content-layout">
- 
+
         <!-- Input panel -->
         <div class="input-panel">
           <div class="card">
@@ -998,12 +998,12 @@
                 <div class="card-sub">AI-powered schrijfassistent</div>
               </div>
             </div>
- 
+
             <div class="form-group" style="margin-bottom:12px">
               <div class="form-label">Primaire keyword</div>
               <input class="form-input" id="kw-input" type="text" placeholder="bijv. duurzaam beleggen 2026" value="organische SEO strategie">
             </div>
- 
+
             <div class="form-group" style="margin-bottom:12px">
               <div class="form-label">Type content</div>
               <select class="form-select" id="content-type">
@@ -1013,7 +1013,7 @@
                 <option value="review">Review / vergelijking</option>
               </select>
             </div>
- 
+
             <div class="form-group" style="margin-bottom:12px">
               <div class="form-label">Toon</div>
               <div class="tag-row">
@@ -1023,22 +1023,22 @@
                 <span class="tag" onclick="toggleTag(this)">Conversatief</span>
               </div>
             </div>
- 
+
             <div class="form-group" style="margin-bottom:12px">
               <div class="form-label">Doelgroep</div>
               <input class="form-input" type="text" placeholder="bijv. MKB eigenaren, marketeers" value="SEO professionals & marketeers">
             </div>
- 
+
             <div class="form-group" style="margin-bottom:16px">
               <div class="form-label">Extra instructies</div>
               <textarea class="form-textarea" placeholder="Specifieke eisen, bronnen, structuur..."></textarea>
             </div>
- 
+
             <button class="btn btn-primary btn-full" onclick="generateContent()">
               ✦ Genereer content
             </button>
           </div>
- 
+
           <div class="card" id="chat-card">
             <div class="card-title" style="margin-bottom:14px">Verfijn met AI</div>
             <div class="chat-thread" id="chat-thread">
@@ -1053,7 +1053,7 @@
             </div>
           </div>
         </div>
- 
+
         <!-- Output panel -->
         <div class="output-panel">
           <div class="output-tabs card" style="border-radius: var(--radius-lg) var(--radius-lg) 0 0; border-bottom: 1px solid var(--border);">
@@ -1062,7 +1062,7 @@
             <div class="output-tab" onclick="switchTab('structuur',this)">Structuur</div>
           </div>
           <div class="output-content">
- 
+
             <div class="tab-pane active" id="tab-artikel">
               <div id="artikel-output" class="ai-response">
                 <p style="color:var(--muted); font-style:italic; font-size:13px;">
@@ -1070,24 +1070,24 @@
                 </p>
               </div>
             </div>
- 
+
             <div class="tab-pane" id="tab-seo">
               <div id="seo-output">
                 <p style="color:var(--muted); font-style:italic; font-size:13px;">Genereer eerst content voor een SEO analyse.</p>
               </div>
             </div>
- 
+
             <div class="tab-pane" id="tab-structuur">
               <div id="struct-output">
                 <p style="color:var(--muted); font-style:italic; font-size:13px;">Genereer eerst content voor een structuuroverzicht.</p>
               </div>
             </div>
- 
+
           </div>
         </div>
       </div>
     </div>
- 
+
     <!-- ============ META GENERATOR ============ -->
     <div class="page" id="page-meta">
       <div style="max-width:900px">
@@ -1097,7 +1097,7 @@
             <div class="section-sub">Genereer geoptimaliseerde titles en descriptions</div>
           </div>
         </div>
- 
+
         <div class="card" style="margin-bottom:16px">
           <div class="form-group" style="margin-bottom:12px">
             <div class="form-label">Pagina onderwerp / keyword</div>
@@ -1114,7 +1114,7 @@
           </div>
           <button class="btn btn-primary" onclick="generateMeta()">✦ Genereer meta tags</button>
         </div>
- 
+
         <div id="meta-results" class="card">
           <table class="meta-table">
             <thead>
@@ -1132,7 +1132,7 @@
         </div>
       </div>
     </div>
- 
+
     <!-- ============ CONTENT BRIEF ============ -->
     <div class="page" id="page-brief">
       <div style="max-width:900px">
@@ -1142,7 +1142,7 @@
             <div class="section-sub">Volledige schrijfopdracht voor je team</div>
           </div>
         </div>
- 
+
         <div class="card" style="margin-bottom:16px">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
             <div class="form-group">
@@ -1156,13 +1156,13 @@
           </div>
           <button class="btn btn-primary" onclick="generateBrief()">✦ Maak content brief</button>
         </div>
- 
+
         <div id="brief-output-wrap" class="card" style="display:none">
           <div id="brief-content"></div>
         </div>
       </div>
     </div>
- 
+
     <!-- ============ TRAFFIC ============ -->
     <div class="page" id="page-traffic">
       <div class="section-header">
@@ -1176,7 +1176,7 @@
           <button class="period-tab">12m</button>
         </div>
       </div>
- 
+
       <div class="metric-grid">
         <div class="metric-card">
           <div class="metric-label">Clicks</div>
@@ -1199,7 +1199,7 @@
           <div class="metric-delta delta-up">▲ +2.1 pos</div>
         </div>
       </div>
- 
+
       <div class="grid-2" style="margin-bottom:20px">
         <div class="card">
           <div class="card-head">
@@ -1218,7 +1218,7 @@
           </div>
         </div>
       </div>
- 
+
       <div class="card" style="position:relative">
         <div class="card-head"><div class="card-title">Top pagina's</div></div>
         <table class="kw-table">
@@ -1232,14 +1232,14 @@
           </tbody>
         </table>
       </div>
- 
+
       <!-- Floating connect button -->
       <button class="tools-fab" id="tools-fab" onclick="openToolsPanel()">
         <span style="font-size:15px">⚡</span>
         <span>Koppel databronnen</span>
       </button>
     </div>
- 
+
     <!-- Tools connect modal -->
     <div id="tools-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.65);" onclick="handleToolsOverlayClick(event)">
       <div class="tools-panel" id="tools-panel">
@@ -1250,7 +1250,7 @@
           </div>
           <button onclick="closeToolsPanel()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;line-height:1;">✕</button>
         </div>
- 
+
         <!-- Tool: GA4 -->
         <div class="tool-card" id="tool-ga4">
           <div class="tool-logo" style="background:linear-gradient(135deg,#e8710a,#f9ab00)">
@@ -1264,7 +1264,7 @@
             <button class="tool-connect-btn" onclick="connectTool('ga4')">Inloggen</button>
           </div>
         </div>
- 
+
         <!-- Tool: GSC -->
         <div class="tool-card" id="tool-gsc">
           <div class="tool-logo" style="background:linear-gradient(135deg,#4285f4,#34a853)">
@@ -1278,7 +1278,7 @@
             <button class="tool-connect-btn" onclick="connectTool('gsc')">Inloggen</button>
           </div>
         </div>
- 
+
         <!-- Tool: Ahrefs / Semrush toggle -->
         <div class="tool-card" id="tool-seo3p">
           <div class="tool-logo" style="background:linear-gradient(135deg,#ff6b35,#f7931e)">
@@ -1297,7 +1297,7 @@
             <button class="tool-connect-btn" onclick="connectTool('seo3p')">API key</button>
           </div>
         </div>
- 
+
         <!-- API key input (hidden until needed) -->
         <div id="apikey-form" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:4px;">
           <div style="font-size:11px;font-family:'SF Mono','Fira Mono',Consolas,monospace;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;" id="apikey-label">Ahrefs API key</div>
@@ -1307,7 +1307,7 @@
           </div>
           <div style="font-size:11px;color:var(--muted);margin-top:8px;">Je key wordt alleen lokaal opgeslagen in deze sessie.</div>
         </div>
- 
+
         <div class="tools-panel-footer">
           <div style="font-size:11px;color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;">
             <span id="connected-count">0</span> van 3 bronnen verbonden
@@ -1316,7 +1316,7 @@
         </div>
       </div>
     </div>
- 
+
     <!-- ============ AI MENTIONS ============ -->
     <div class="page" id="page-ai">
       <div class="section-header">
@@ -1325,7 +1325,7 @@
           <div class="section-sub">Vermeldingen in ChatGPT, Perplexity, Gemini & meer</div>
         </div>
       </div>
- 
+
       <div class="metric-grid">
         <div class="metric-card">
           <div class="metric-label">Totaal mentions</div>
@@ -1348,7 +1348,7 @@
           <div class="metric-delta delta-up">▲ positief</div>
         </div>
       </div>
- 
+
       <div class="grid-2" style="margin-bottom:20px">
         <div class="card">
           <div class="card-head"><div class="card-title">Mentions per AI platform</div></div>
@@ -1363,7 +1363,7 @@
           </div>
         </div>
       </div>
- 
+
       <div class="card">
         <div class="card-head"><div class="card-title">Recente citations</div></div>
         <div class="citation-list">
@@ -1393,14 +1393,14 @@
           </div>
         </div>
       </div>
- 
+
       <!-- Otterly FAB -->
       <button class="tools-fab" id="tools-fab-ai" onclick="openToolsPanelAi()">
         <span style="font-size:15px">⚡</span>
         <span>Koppel databronnen</span>
       </button>
     </div>
- 
+
     <!-- Otterly tools panel -->
     <div id="tools-modal-ai" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.65);" onclick="if(event.target===this)closeToolsPanelAi()">
       <div class="tools-panel" id="tools-panel-ai">
@@ -1437,7 +1437,7 @@
         </div>
       </div>
     </div>
- 
+
     <!-- ============ KEYWORDS ============ -->
     <div class="page" id="page-keywords">
       <div class="section-header">
@@ -1446,7 +1446,7 @@
           <div class="section-sub">Positietracking — dagelijks bijgewerkt</div>
         </div>
       </div>
- 
+
       <div class="metric-grid">
         <div class="metric-card">
           <div class="metric-label">Top 3</div>
@@ -1469,7 +1469,7 @@
           <div class="metric-delta delta-down">▼ −4 vs vorige week</div>
         </div>
       </div>
- 
+
       <div class="card">
         <div class="card-head">
           <div class="card-title">Keyword posities</div>
@@ -1523,14 +1523,14 @@
           </tbody>
         </table>
       </div>
- 
+
       <!-- Keywords FAB -->
       <button class="tools-fab" id="tools-fab-keywords" onclick="openToolsPanelKeywords()">
         <span id="fab-icon-keywords" style="font-size:15px">&#x26A1;</span>
         <span id="fab-label-keywords">Koppel databronnen</span>
       </button>
     </div>
- 
+
     <!-- Keywords tools panel (reuses traffic connections) -->
     <div id="tools-modal-keywords" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.65);" onclick="if(event.target===this)closeToolsPanelKeywords()">
       <div class="tools-panel" id="tools-panel-keywords">
@@ -1541,7 +1541,7 @@
           </div>
           <button onclick="closeToolsPanelKeywords()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px;line-height:1;">&#x2715;</button>
         </div>
- 
+
         <!-- GSC mirror -->
         <div class="tool-card" id="kw-tool-gsc">
           <div class="tool-logo" style="background:linear-gradient(135deg,#4285f4,#34a853)">
@@ -1555,7 +1555,7 @@
             <button class="tool-connect-btn" onclick="connectTool('gsc');closeToolsPanelKeywords();">Inloggen</button>
           </div>
         </div>
- 
+
         <!-- Ahrefs/Semrush mirror -->
         <div class="tool-card" id="kw-tool-seo3p">
           <div class="tool-logo" style="background:linear-gradient(135deg,#ff6b35,#f7931e)">
@@ -1569,18 +1569,18 @@
             <button class="tool-connect-btn" onclick="connectTool('seo3p');closeToolsPanelKeywords();">API key</button>
           </div>
         </div>
- 
+
         <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-top:4px;">
           <div style="font-size:12px;color:var(--muted2);line-height:1.6;">&#9432; Stel deze koppelingen in via <strong style="color:var(--text)">Organisch traffic</strong> &#x2192; Koppel databronnen. De status wordt hier automatisch gesynchroniseerd.</div>
         </div>
- 
+
         <div class="tools-panel-footer">
           <div style="font-size:11px;color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;"><span id="connected-count-keywords">0</span> van 2 bronnen verbonden</div>
           <button class="btn btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="closeToolsPanelKeywords()">Sluiten</button>
         </div>
       </div>
     </div>
- 
+
     <!-- ============ CONCURRENT ============ -->
     <div class="page" id="page-competitor">
       <div class="section-header">
@@ -1589,7 +1589,7 @@
           <div class="section-sub">Vergelijk je positie ten opzichte van concurrenten</div>
         </div>
       </div>
- 
+
       <div class="metric-grid">
         <div class="metric-card">
           <div class="metric-label">Jouw score</div>
@@ -1612,7 +1612,7 @@
           <div class="metric-delta delta-up">▲ verschil kleiner</div>
         </div>
       </div>
- 
+
       <div class="grid-2" style="margin-bottom:20px">
         <div class="card">
           <div class="card-head"><div class="card-title">Domain Authority vergelijking</div></div>
@@ -1627,7 +1627,7 @@
           </div>
         </div>
       </div>
- 
+
       <div class="card">
         <div class="card-head"><div class="card-title">Concurrenten overzicht</div></div>
         <div class="comp-row head">
@@ -1662,14 +1662,14 @@
           <div style="font-size:12px;color:var(--muted2);font-family:'SF Mono','Fira Mono',Consolas,monospace">4.3</div>
         </div>
       </div>
- 
+
       <!-- SimilarWeb FAB -->
       <button class="tools-fab" id="tools-fab-comp" onclick="openToolsPanelComp()">
         <span style="font-size:15px">⚡</span>
         <span>Koppel databronnen</span>
       </button>
     </div>
- 
+
     <!-- SimilarWeb tools panel -->
     <div id="tools-modal-comp" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.65);" onclick="if(event.target===this)closeToolsPanelComp()">
       <div class="tools-panel" id="tools-panel-comp">
@@ -1706,11 +1706,11 @@
         </div>
       </div>
     </div>
- 
- 
+
+
   </div><!-- /main -->
 </div><!-- /shell -->
- 
+
 <script>
 function sparkle(vals) {
   const max = Math.max(...vals);
@@ -1719,7 +1719,7 @@ function sparkle(vals) {
     return `<div class="spark-bar" style="height:${h}px;background:var(--accent)"></div>`;
   }).join('');
 }
- 
+
 document.querySelectorAll('.sparkline').forEach(el => {
   const vals = el.dataset.vals ? el.dataset.vals.split(',').map(Number) : [3,5,4,6,5,7,8];
   const max = Math.max(...vals);
@@ -1728,14 +1728,14 @@ document.querySelectorAll('.sparkline').forEach(el => {
     return `<div class="spark-bar" style="height:${h}px"></div>`;
   }).join('');
 });
- 
+
 const pages = ['content','meta','brief','traffic','ai','keywords','competitor'];
 const titles = {
   content: 'Content studio', meta: 'Meta generator', brief: 'Content brief',
   traffic: 'Organisch traffic', ai: 'AI mentions & citations',
   keywords: 'Keyword rankings', competitor: 'Concurrentie analyse'
 };
- 
+
 function goTo(id) {
   pages.forEach(p => {
     document.getElementById('page-'+p).classList.remove('active');
@@ -1750,27 +1750,27 @@ function goTo(id) {
   if (id === 'ai' && !window.aiChartsBuilt) buildAiCharts();
   if (id === 'competitor' && !window.compChartsBuilt) buildCompCharts();
 }
- 
+
 function toggleTag(el) {
   el.classList.toggle('active');
 }
- 
+
 function switchTab(name, el) {
   document.querySelectorAll('.output-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   if (el) el.classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
 }
- 
+
 // Loading animation
 function showLoading(el) {
   el.innerHTML = '<div style="padding:20px 0;display:flex;gap:6px;align-items:center"><span style="color:var(--muted);font-size:13px;font-style:italic">AI genereert</span><div class="loading-dots"><span></span><span></span><span></span></div></div>';
 }
- 
+
 function getApiKey() {
   return localStorage.getItem('indicia_api_key') || sessionStorage.getItem('indicia_api_key') || '';
 }
- 
+
 function openApiKeyModal() {
   const existing = getApiKey();
   const input = document.getElementById('modal-apikey-input');
@@ -1779,11 +1779,11 @@ function openApiKeyModal() {
   document.getElementById('apikey-modal').style.display = 'flex';
   setTimeout(() => input.focus(), 100);
 }
- 
+
 function closeApiKeyModal() {
   document.getElementById('apikey-modal').style.display = 'none';
 }
- 
+
 function saveModalApiKey() {
   const val = document.getElementById('modal-apikey-input').value.trim();
   if (!val) { closeApiKeyModal(); return; }
@@ -1793,7 +1793,7 @@ function saveModalApiKey() {
   updateApiKeyBtn();
   closeApiKeyModal();
 }
- 
+
 function updateApiKeyBtn() {
   const key = getApiKey();
   const dot = document.getElementById('apikey-dot');
@@ -1802,9 +1802,9 @@ function updateApiKeyBtn() {
   if (key) { dot.style.color = 'var(--green)'; label.textContent = 'API key ✓'; }
   else { dot.style.color = 'var(--red)'; label.textContent = 'API key instellen'; }
 }
- 
+
 document.addEventListener('DOMContentLoaded', updateApiKeyBtn);
- 
+
 async function callClaude(prompt) {
   const key = getApiKey();
   if (!key) { openApiKeyModal(); throw new Error('Geen API key'); }
@@ -1818,7 +1818,7 @@ async function callClaude(prompt) {
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 1500,
+      max_tokens: 4000,
       messages: [{ role: 'user', content: Array.isArray(prompt) ? prompt : [{ type: 'text', text: prompt }] }]
     })
   });
@@ -1835,7 +1835,7 @@ async function callClaude(prompt) {
   }
   return data.content?.[0]?.text || 'Er ging iets mis.';
 }
- 
+
 async function generateContent() {
   const kw = document.getElementById('kw-input').value;
   const type = document.getElementById('content-type').value;
@@ -1843,15 +1843,15 @@ async function generateContent() {
   const seoOut = document.getElementById('seo-output');
   const structOut = document.getElementById('struct-output');
   showLoading(out);
- 
+
   const prompt = `Schrijf een professioneel SEO-geoptimaliseerd ${type} over "${kw}" in het Nederlands.
 Structuur: pakkende intro (2 zinnen), 3 hoofdsecties met H2 koppen, praktische tips, sterke conclusie.
 Gebruik het keyword 3-5x op natuurlijke wijze. Schrijf voor SEO professionals & marketeers.
 Format: gebruik <h3> voor kopjes, <p> voor tekst, <ul><li> voor lijsten, <strong> voor belangrijke termen.`;
- 
+
   const text = await callClaude(prompt);
   out.innerHTML = `<div class="ai-response">${text}</div>`;
- 
+
   const seoPrompt = `Analyseer dit artikel over "${kw}" voor SEO. Geef in JSON terug: {"score":0-100,"keyword_density":"x%","readability":"goed/matig/slecht","suggestions":["tip1","tip2","tip3"],"strengths":["s1","s2"]}. Alleen JSON, geen tekst eromheen.`;
   const seoRaw = await callClaude(seoPrompt);
   try {
@@ -1876,7 +1876,7 @@ Format: gebruik <h3> voor kopjes, <p> voor tekst, <ul><li> voor lijsten, <strong
         ${(seo.strengths||[]).map(s=>`<div class="brief-item"><span class="brief-bullet" style="color:var(--green)">●</span>${s}</div>`).join('')}
       </div>`;
   } catch(e) { seoOut.innerHTML = `<div class="ai-response">${seoRaw}</div>`; }
- 
+
   const structPrompt = `Maak een content structuuroverzicht voor "${kw}". Geef JSON: {"title":"H1 titel","meta_desc":"max 160 tekens","sections":[{"h2":"kop","desc":"1 zin beschrijving"}],"internal_links":["link idee 1","link idee 2"],"cta":"call to action tekst"}. Alleen JSON.`;
   const structRaw = await callClaude(structPrompt);
   try {
@@ -1904,7 +1904,7 @@ Format: gebruik <h3> voor kopjes, <p> voor tekst, <ul><li> voor lijsten, <strong
       </div>`;
   } catch(e) { structOut.innerHTML = `<div class="ai-response">${structRaw}</div>`; }
 }
- 
+
 async function sendChat() {
   const inp = document.getElementById('chat-in');
   const msg = inp.value.trim();
@@ -1917,18 +1917,18 @@ async function sendChat() {
   dotDiv.innerHTML = `<div class="msg-avatar ai">AI</div><div class="msg-body"><div class="loading-dots"><span></span><span></span><span></span></div></div>`;
   thread.appendChild(dotDiv);
   thread.scrollTop = thread.scrollHeight;
- 
+
   const kw = document.getElementById('kw-input').value;
   const reply = await callClaude(`Je helpt iemand bij het schrijven van SEO content over "${kw}". Instructie: "${msg}". Geef een beknopt, professioneel antwoord in het Nederlands.`);
   dotDiv.innerHTML = `<div class="msg-avatar ai">AI</div><div class="msg-body">${reply}</div>`;
   thread.scrollTop = thread.scrollHeight;
 }
- 
+
 async function generateMeta() {
   const kw = document.getElementById('meta-kw').value;
   const tbody = document.getElementById('meta-tbody');
   tbody.innerHTML = '<tr><td colspan="4"><div class="loading-dots" style="padding:12px 0"><span></span><span></span><span></span></div></td></tr>';
- 
+
   const prompt = `Genereer 3 varianten van meta titles EN 3 meta descriptions voor het keyword "${kw}". Geef JSON: {"titles":[{"text":"...","chars":0,"score":"goed/matig"}],"descriptions":[{"text":"...","chars":0,"score":"goed/matig"}]}. Alleen JSON.`;
   const raw = await callClaude(prompt);
   try {
@@ -1943,14 +1943,14 @@ async function generateMeta() {
     tbody.innerHTML = rows;
   } catch(e) { tbody.innerHTML = `<tr><td colspan="4" style="color:var(--muted2)">${raw}</td></tr>`; }
 }
- 
+
 async function generateBrief() {
   const kw = document.getElementById('brief-kw').value;
   const wrap = document.getElementById('brief-output-wrap');
   const out = document.getElementById('brief-content');
   wrap.style.display = 'block';
   showLoading(out);
- 
+
   const prompt = `Maak een uitgebreide content brief voor "${kw}" in het Nederlands. Geef JSON: {"doel":"","doelgroep":"","zoekintentie":"informationeel/commercieel/transactioneel","primary_kw":"","secondary_kws":[""],"word_count":"","structuur":[{"type":"H1/H2/H3","tekst":"","doel":""}],"concurrenten":["url 1","url 2"],"bronnen":[""],"interne_links":[""],"tips":[""]}. Alleen JSON.`;
   const raw = await callClaude(prompt);
   try {
@@ -1980,9 +1980,9 @@ async function generateBrief() {
       </div>`;
   } catch(e) { out.innerHTML = `<div class="ai-response">${raw}</div>`; }
 }
- 
- 
- 
+
+
+
 // ============ CHARTS ============
 const darkOptions = {
   plugins: { legend: { labels: { color: '#374151', font: { family: 'Helvetica Neue', size: 11 } } } },
@@ -1991,7 +1991,7 @@ const darkOptions = {
     y: { ticks: { color: '#6b7280', font: { family: 'Helvetica Neue', size: 10 } }, grid: { color: 'rgba(0,0,0,0.05)' } }
   }
 };
- 
+
 function buildCharts() {
   window.chartsBuilt = true;
   const months = ['Oct','Nov','Dec','Jan','Feb','Mrt'];
@@ -2015,7 +2015,7 @@ function buildCharts() {
     options: { maintainAspectRatio: false, plugins: { legend: { labels: { color: '#6b7280', font: { family: 'Helvetica Neue', size: 11 } } } } }
   });
 }
- 
+
 function buildAiCharts() {
   window.aiChartsBuilt = true;
   new Chart(document.getElementById('aiPlatformChart'), {
@@ -2036,7 +2036,7 @@ function buildAiCharts() {
     options: { ...darkOptions, maintainAspectRatio: false }
   });
 }
- 
+
 // ============ PROFILES ============
 let profiles = [
   { id: 1, company: 'INDICIA', website: 'indicia.nl', location: 'landelijk', locationDetail: '', competitors: ['concurrent-a.nl','seo-bureau.nl','digitalmarketing.nl'] }
@@ -2044,11 +2044,11 @@ let profiles = [
 let activeProfileId = 1;
 let selectedLocation = '';
 let newProfileData = {};
- 
+
 function getInitial(name) {
   return (name || '?').trim().charAt(0).toUpperCase();
 }
- 
+
 function renderProfileDropdown() {
   const list = document.getElementById('profile-dropdown-list');
   list.innerHTML = profiles.map(p => `
@@ -2062,7 +2062,7 @@ function renderProfileDropdown() {
     </button>
   `).join('');
 }
- 
+
 function switchProfile(id) {
   activeProfileId = id;
   const p = profiles.find(x => x.id === id);
@@ -2072,7 +2072,7 @@ function switchProfile(id) {
   renderProfileDropdown();
   toggleProfileDropdown(false);
 }
- 
+
 function toggleProfileDropdown(force) {
   const dd = document.getElementById('profile-dropdown');
   const chevron = document.getElementById('profile-chevron');
@@ -2082,7 +2082,7 @@ function toggleProfileDropdown(force) {
   chevron.style.transform = shouldOpen ? 'rotate(180deg)' : '';
   if (shouldOpen) renderProfileDropdown();
 }
- 
+
 document.addEventListener('click', e => {
   const sw = document.getElementById('profile-switcher');
   const dd = document.getElementById('profile-dropdown');
@@ -2090,7 +2090,7 @@ document.addEventListener('click', e => {
     toggleProfileDropdown(false);
   }
 });
- 
+
 // ============ PROFILE MODAL ============
 function openProfileModal() {
   toggleProfileDropdown(false);
@@ -2111,11 +2111,11 @@ function openProfileModal() {
   const modal = document.getElementById('profile-modal');
   modal.style.display = 'flex';
 }
- 
+
 function closeProfileModal() {
   document.getElementById('profile-modal').style.display = 'none';
 }
- 
+
 function showModalStep(n) {
   [1,2,3,4].forEach(i => {
     document.getElementById('modal-step-'+i).style.display = i === n ? 'block' : 'none';
@@ -2127,7 +2127,7 @@ function showModalStep(n) {
     }
   });
 }
- 
+
 function modalNext(step) {
   if (step === 1) {
     const co = document.getElementById('new-company').value.trim();
@@ -2148,11 +2148,11 @@ function modalNext(step) {
     showModalStep(4);
   }
 }
- 
+
 function modalBack(step) {
   showModalStep(step - 1);
 }
- 
+
 function selectLocation(el, val) {
   selectedLocation = val;
   document.querySelectorAll('.loc-option').forEach(o => o.classList.remove('selected'));
@@ -2171,7 +2171,7 @@ function selectLocation(el, val) {
     wrap.style.display = 'none';
   }
 }
- 
+
 function addCompetitorField() {
   const container = document.getElementById('competitor-inputs');
   const count = container.querySelectorAll('.comp-input-row').length;
@@ -2182,7 +2182,7 @@ function addCompetitorField() {
   container.appendChild(row);
   if (count + 1 >= 5) document.getElementById('add-comp-btn').style.display = 'none';
 }
- 
+
 function buildModalSummary() {
   const locLabels = { landelijk: 'Landelijk', regionaal: 'Regionaal', plaats: 'Plaatselijk' };
   const locStr = locLabels[newProfileData.location] + (newProfileData.locationDetail ? ` — ${newProfileData.locationDetail}` : '');
@@ -2195,17 +2195,17 @@ function buildModalSummary() {
       <div><span style="color:var(--muted);font-family:'SF Mono','Fira Mono',Consolas,monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.8px;">Concurrenten</span><div style="color:var(--text);margin-top:3px">${compStr}</div></div>
     </div>`;
 }
- 
+
 function saveProfile() {
   const id = Date.now();
   profiles.push({ id, ...newProfileData });
   closeProfileModal();
   switchProfile(id);
 }
- 
+
 // Init
 renderProfileDropdown();
- 
+
 // ============ BRANDING ============
 function toggleBranding() {
   const panel = document.getElementById('branding-panel');
@@ -2213,21 +2213,21 @@ function toggleBranding() {
   panel.classList.toggle('open');
   arrow.style.transform = panel.classList.contains('open') ? 'rotate(180deg)' : '';
 }
- 
+
 function hexToRgb(hex) {
   const r = parseInt(hex.slice(1,3),16);
   const g = parseInt(hex.slice(3,5),16);
   const b = parseInt(hex.slice(5,7),16);
   return `${r},${g},${b}`;
 }
- 
+
 function darkenHex(hex, amount=30) {
   let r = Math.max(0, parseInt(hex.slice(1,3),16) - amount);
   let g = Math.max(0, parseInt(hex.slice(3,5),16) - amount);
   let b = Math.max(0, parseInt(hex.slice(5,7),16) - amount);
   return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
 }
- 
+
 function selectSwatch(el) {
   document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
   el.classList.add('selected');
@@ -2235,21 +2235,21 @@ function selectSwatch(el) {
   document.getElementById('color-picker').value = color;
   document.getElementById('color-hex').value = color;
 }
- 
+
 function onColorPick(val) {
   document.getElementById('color-hex').value = val;
   document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
 }
- 
+
 function onHexInput(val) {
   if (/^#[0-9a-fA-F]{6}$/.test(val)) {
     document.getElementById('color-picker').value = val;
     document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
   }
 }
- 
+
 let currentLogoDataUrl = null;
- 
+
 function handleLogoUpload(input) {
   const file = input.files[0];
   if (!file) return;
@@ -2264,14 +2264,14 @@ function handleLogoUpload(input) {
   };
   reader.readAsDataURL(file);
 }
- 
+
 function updateLogoPreview() {
   if (currentLogoDataUrl) return; // photo takes priority
   const letter = (document.getElementById('brand-letter').value.trim() || 'I').toUpperCase();
   const preview = document.getElementById('logo-preview');
   preview.textContent = letter;
 }
- 
+
 function clearLogoPhoto() {
   currentLogoDataUrl = null;
   document.getElementById('logo-upload').value = '';
@@ -2280,7 +2280,7 @@ function clearLogoPhoto() {
   const preview = document.getElementById('logo-preview');
   preview.innerHTML = letter;
 }
- 
+
 function applyBranding() {
   const name = document.getElementById('brand-name').value.trim() || 'SEOintel';
   const letter = (document.getElementById('brand-letter').value.trim() || 'I').toUpperCase();
@@ -2288,13 +2288,13 @@ function applyBranding() {
   const validColor = /^#[0-9a-fA-F]{6}$/.test(color) ? color : '#c0103a';
   const darker = darkenHex(validColor, 28);
   const rgb = hexToRgb(validColor);
- 
+
   // Update CSS vars
   const root = document.documentElement;
   root.style.setProperty('--accent', validColor);
   root.style.setProperty('--accent2', darker);
   root.style.setProperty('--accent-dim', `rgba(${rgb},0.12)`);
- 
+
   // Update sidebar logo icon
   const logoIcon = document.querySelector('.logo-icon');
   if (currentLogoDataUrl) {
@@ -2303,7 +2303,7 @@ function applyBranding() {
     logoIcon.textContent = letter;
     logoIcon.style.background = '';
   }
- 
+
   // Update profile avatar in switcher
   const profileAvatar = document.getElementById('profile-avatar');
   if (currentLogoDataUrl) {
@@ -2311,19 +2311,19 @@ function applyBranding() {
   } else {
     profileAvatar.textContent = letter;
   }
- 
+
   // Update logo text
   const logoText = document.querySelector('.logo-text');
   const split = Math.max(1, Math.floor(name.length / 2));
   logoText.innerHTML = name.slice(0, split) + '<span>' + name.slice(split) + '</span>';
- 
+
   // Flash save button
   const btn = document.querySelector('.branding-save');
   btn.textContent = '✓ Toegepast';
   btn.style.background = 'var(--green)';
   setTimeout(() => { btn.textContent = '✦ Toepassen'; btn.style.background = ''; }, 1800);
 }
- 
+
 function buildCompCharts() {
   window.compChartsBuilt = true;
   new Chart(document.getElementById('daChart'), {
@@ -2346,18 +2346,18 @@ function buildCompCharts() {
     options: { maintainAspectRatio: false, plugins: { legend: { labels: { color: '#374151', font: { family: 'Helvetica Neue', size: 11 } } } }, scales: { r: { ticks: { color: '#6b7280', font: { size: 10 }, backdropColor: 'rgba(255,255,255,0)' }, grid: { color: 'rgba(0,0,0,0.05)' }, pointLabels: { color: '#6b7280', font: { size: 11 } } } } }
   });
 }
- 
+
 // ============ TOOLS CONNECT ============
 const toolConnected = { ga4: false, gsc: false, seo3p: false };
 let currentOAuthTool = null;
 let selected3p = 'ahrefs';
- 
+
 function openToolsPanel() {
   document.getElementById('tools-modal').style.display = 'block';
   setTimeout(() => document.getElementById('tools-panel').classList.add('open'), 10);
   updateConnectedCount();
 }
- 
+
 function closeToolsPanel() {
   document.getElementById('tools-panel').classList.remove('open');
   setTimeout(() => {
@@ -2365,11 +2365,11 @@ function closeToolsPanel() {
     document.getElementById('apikey-form').style.display = 'none';
   }, 320);
 }
- 
+
 function handleToolsOverlayClick(e) {
   if (e.target === document.getElementById('tools-modal')) closeToolsPanel();
 }
- 
+
 function connectTool(tool) {
   if (tool === 'seo3p') {
     const form = document.getElementById('apikey-form');
@@ -2385,7 +2385,7 @@ function connectTool(tool) {
     : 'Selecteer het account met toegang tot Search Console';
   document.getElementById('oauth-popup').classList.add('open');
 }
- 
+
 function selectOAuthAccount(email) {
   document.getElementById('oauth-popup').classList.remove('open');
   if (!currentOAuthTool) return;
@@ -2394,12 +2394,12 @@ function selectOAuthAccount(email) {
     currentOAuthTool = null;
   }, 200);
 }
- 
+
 function closeOAuth() {
   document.getElementById('oauth-popup').classList.remove('open');
   currentOAuthTool = null;
 }
- 
+
 function saveApiKey() {
   const val = document.getElementById('apikey-input').value.trim();
   if (!val) return;
@@ -2407,7 +2407,7 @@ function saveApiKey() {
   document.getElementById('apikey-input').value = '';
   markToolConnected('seo3p', selected3p === 'ahrefs' ? 'Ahrefs' : 'Semrush');
 }
- 
+
 function markToolConnected(tool, label) {
   toolConnected[tool] = true;
   connectedTools[tool] = true;
@@ -2418,19 +2418,19 @@ function markToolConnected(tool, label) {
   updateConnectedCount();
   updateAllFabs();
 }
- 
+
 function updateConnectedCount() {
   const n = Object.values(toolConnected).filter(Boolean).length;
   document.getElementById('connected-count').textContent = n;
 }
- 
+
 function selectSeo3p(choice) {
   selected3p = choice;
   document.getElementById('tab-ahrefs').classList.toggle('active', choice === 'ahrefs');
   document.getElementById('tab-semrush').classList.toggle('active', choice === 'semrush');
   document.getElementById('apikey-label').textContent = (choice === 'ahrefs' ? 'Ahrefs' : 'Semrush') + ' API key';
 }
- 
+
 // ============ FAB STATE MANAGEMENT ============
 // Tracks how many tools needed per page and current connected count
 const fabConfig = {
@@ -2439,13 +2439,13 @@ const fabConfig = {
   competitor: { fabId: 'tools-fab-comp',     total: 1, tools: ['similarweb'] },
   keywords:   { fabId: 'tools-fab-keywords', total: 2, tools: ['gsc','seo3p'] }
 };
- 
+
 // Master connection state — single source of truth
 const connectedTools = {
   ga4: false, gsc: false, seo3p: false,
   otterly: false, similarweb: false
 };
- 
+
 function updateAllFabs() {
   Object.entries(fabConfig).forEach(([page, cfg]) => {
     const fab = document.getElementById(cfg.fabId);
@@ -2454,7 +2454,7 @@ function updateAllFabs() {
     const allConnected = connectedCount === cfg.total;
     const iconEl = fab.querySelector('[id^="fab-icon"]');
     const labelEl = fab.querySelector('[id^="fab-label"]');
- 
+
     if (allConnected) {
       fab.style.borderColor = 'rgba(34,201,135,0.5)';
       fab.style.color = 'var(--green)';
@@ -2474,14 +2474,14 @@ function updateAllFabs() {
       if (iconEl) iconEl.textContent = '⚡';
       if (labelEl) labelEl.textContent = 'Koppel databronnen';
     }
- 
+
     // Update keywords mirror panel statuses
     if (page === 'keywords' || cfg.tools.includes('gsc') || cfg.tools.includes('seo3p')) {
       syncKeywordsMirror();
     }
   });
 }
- 
+
 function syncKeywordsMirror() {
   // Mirror GSC status in keywords panel
   const kwGsc = document.getElementById('kw-status-gsc');
@@ -2514,7 +2514,7 @@ function syncKeywordsMirror() {
     kwCount.textContent = n;
   }
 }
- 
+
 // ============ OTTERLY TOOLS ============
 function openToolsPanelAi() {
   document.getElementById('tools-modal-ai').style.display = 'block';
@@ -2542,7 +2542,7 @@ function saveApiKeyAi() {
   document.getElementById('connected-count-ai').textContent = '1';
   updateAllFabs();
 }
- 
+
 // ============ SIMILARWEB TOOLS ============
 function openToolsPanelComp() {
   document.getElementById('tools-modal-comp').style.display = 'block';
@@ -2570,7 +2570,7 @@ function saveApiKeyComp() {
   document.getElementById('connected-count-comp').textContent = '1';
   updateAllFabs();
 }
- 
+
 // ============ KEYWORDS PANEL ============
 function openToolsPanelKeywords() {
   syncKeywordsMirror();
@@ -2581,7 +2581,7 @@ function closeToolsPanelKeywords() {
   document.getElementById('tools-panel-keywords').classList.remove('open');
   setTimeout(() => document.getElementById('tools-modal-keywords').style.display = 'none', 320);
 }
- 
+
 // Show correct FAB per page — wrap goTo
 (function() {
   const _goTo = goTo;
@@ -2632,7 +2632,7 @@ function closeToolsPanelKeywords() {
     </div>
     <button onclick="closeOAuth()" style="width:100%;margin-top:14px;padding:9px;border-radius:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#9aa0a6;font-size:12px;cursor:pointer;">Annuleren</button>
   </div>
- 
+
   <!-- API Key Modal -->
   <div id="apikey-modal" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;">
     <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:440px;max-width:95vw;padding:28px;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
@@ -2662,6 +2662,6 @@ function closeToolsPanelKeywords() {
       </button>
     </div>
   </div>
- 
+
 </body>
 </html>
