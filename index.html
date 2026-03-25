@@ -440,6 +440,14 @@
 
 
 
+
+  /* Sub keywords */
+  .subkw-row { display:flex; align-items:center; gap:6px; }
+  .subkw-input { flex:1; background:var(--bg3); border:1px solid var(--border2); border-radius:7px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:12px; padding:7px 10px; outline:none; transition:border-color 0.15s; }
+  .subkw-input:focus { border-color:var(--accent); }
+  .subkw-num { width:20px; height:20px; border-radius:5px; background:var(--bg4); border:1px solid var(--border2); display:flex; align-items:center; justify-content:center; font-size:10px; font-family:'DM Mono',monospace; color:var(--muted); flex-shrink:0; }
+  .subkw-remove { width:22px; height:22px; border-radius:5px; border:none; background:var(--bg4); color:var(--muted); cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.12s; padding:0; }
+  .subkw-remove:hover { background:var(--red-dim); color:var(--red); }
   .sparkline { display: flex; align-items: flex-end; gap: 3px; height: 30px; }
   .spark-bar { width: 5px; border-radius: 2px 2px 0 0; background: var(--accent); opacity: 0.5; flex-shrink: 0; transition: opacity 0.15s; }
   .spark-bar:hover { opacity: 1; }
@@ -1002,6 +1010,14 @@
             <div class="form-group" style="margin-bottom:12px">
               <div class="form-label">Primaire keyword</div>
               <input class="form-input" id="kw-input" type="text" placeholder="bijv. duurzaam beleggen 2026" value="organische SEO strategie">
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <div class="form-label" style="margin-bottom:0;">Secundaire keywords <span style="color:var(--muted);font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;">(optioneel, max 5)</span></div>
+                <button type="button" id="add-subkw-btn" onclick="addSubKw()" style="background:none;border:none;color:var(--accent);font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;padding:0;transition:opacity 0.15s;">+ toevoegen</button>
+              </div>
+              <div id="subkw-list" style="display:flex;flex-direction:column;gap:5px;"></div>
             </div>
 
             <div class="form-group" style="margin-bottom:12px">
@@ -1844,9 +1860,13 @@ async function generateContent() {
   const structOut = document.getElementById('struct-output');
   showLoading(out);
 
+  const subKws = getSubKws();
+  const subKwLine = subKws.length > 0 ? `\nSecundaire keywords om subtiel te verwerken: ${subKws.join(', ')}.` : '';
+
   const prompt = `Schrijf een professioneel SEO-geoptimaliseerd ${type} over "${kw}" in het Nederlands.
 Structuur: pakkende intro (2 zinnen), 3 hoofdsecties met H2 koppen, praktische tips, sterke conclusie.
-Gebruik het keyword 3-5x op natuurlijke wijze. Schrijf voor SEO professionals & marketeers.
+Gebruik het primaire keyword 3-5x op natuurlijke wijze.${subKwLine}
+Schrijf voor SEO professionals & marketeers.
 Format: gebruik <h3> voor kopjes, <p> voor tekst, <ul><li> voor lijsten, <strong> voor belangrijke termen.`;
 
   const text = await callClaude(prompt);
@@ -1982,6 +2002,40 @@ async function generateBrief() {
 }
 
 
+
+
+// ── Sub keywords ──────────────────────────────────────────────────────────
+function addSubKw() {
+  const list = document.getElementById('subkw-list');
+  const count = list.querySelectorAll('.subkw-row').length;
+  if (count >= 5) return;
+  const n = count + 1;
+  const row = document.createElement('div');
+  row.className = 'subkw-row';
+  row.innerHTML = `<span class="subkw-num">${n}</span><input class="subkw-input" type="text" placeholder="sub keyword ${n}..."><button class="subkw-remove" onclick="removeSubKw(this)" title="Verwijder">&#x2715;</button>`;
+  list.appendChild(row);
+  row.querySelector('input').focus();
+  if (list.querySelectorAll('.subkw-row').length >= 5) {
+    document.getElementById('add-subkw-btn').style.opacity = '0.3';
+    document.getElementById('add-subkw-btn').style.pointerEvents = 'none';
+  }
+}
+
+function removeSubKw(btn) {
+  btn.closest('.subkw-row').remove();
+  const btn2 = document.getElementById('add-subkw-btn');
+  btn2.style.opacity = ''; btn2.style.pointerEvents = '';
+  // Renumber
+  document.querySelectorAll('#subkw-list .subkw-row').forEach((row, i) => {
+    row.querySelector('.subkw-num').textContent = i + 1;
+    row.querySelector('input').placeholder = `sub keyword ${i + 1}...`;
+  });
+}
+
+function getSubKws() {
+  return Array.from(document.querySelectorAll('#subkw-list .subkw-input'))
+    .map(i => i.value.trim()).filter(Boolean);
+}
 
 // ============ CHARTS ============
 const darkOptions = {
