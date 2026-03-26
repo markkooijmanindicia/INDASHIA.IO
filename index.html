@@ -448,6 +448,133 @@
   .subkw-num { width:20px; height:20px; border-radius:5px; background:var(--bg4); border:1px solid var(--border2); display:flex; align-items:center; justify-content:center; font-size:10px; font-family:'DM Mono',monospace; color:var(--muted); flex-shrink:0; }
   .subkw-remove { width:22px; height:22px; border-radius:5px; border:none; background:var(--bg4); color:var(--muted); cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.12s; padding:0; }
   .subkw-remove:hover { background:var(--red-dim); color:var(--red); }
+
+  /* ============ MOBILE RESPONSIVE ============ */
+
+  /* Hamburger button - alleen zichtbaar op mobiel */
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 6px;
+    flex-direction: column;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .hamburger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.25s;
+  }
+
+  /* Sidebar overlay op mobiel */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 40;
+  }
+  .sidebar-overlay.open { display: block; }
+
+  @media (max-width: 768px) {
+    /* Hamburger tonen */
+    .hamburger { display: flex; }
+
+    /* Sidebar als slide-in overlay */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 100vh;
+      z-index: 50;
+      transform: translateX(-100%);
+      transition: transform 0.28s cubic-bezier(0.32,0.72,0,1);
+      box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+    }
+    .sidebar.open { transform: translateX(0); }
+
+    /* Main neemt volle breedte */
+    .main { width: 100%; overflow-x: hidden; }
+
+    /* Topbar compact */
+    .topbar { padding: 12px 16px; }
+    .topbar-title { font-size: 14px; }
+    .badge { display: none; }
+
+    /* INDASHIA.IO kleiner op mobiel */
+    .topbar > div[style*="absolute"] span {
+      font-size: 11px !important;
+    }
+
+    /* Pages padding */
+    .page { padding: 16px; }
+
+    /* Metric grid: 2 kolommen */
+    .metric-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+    /* Content studio: stapel verticaal */
+    .content-layout { grid-template-columns: 1fr; }
+
+    /* Grid 2 kolommen -> 1 kolom */
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr; }
+
+    /* Section header: stapel */
+    .section-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+
+    /* Output tabs scrollable */
+    .output-tabs { overflow-x: auto; }
+
+    /* Topbar actions: verberg minder belangrijke items */
+    #apikey-btn span:last-child { display: none; }
+    #apikey-btn { padding: 5px 8px; }
+
+    /* Period tabs scrollable */
+    .period-tabs { overflow-x: auto; flex-wrap: nowrap; }
+
+    /* Competitor rows compact */
+    .comp-row { grid-template-columns: 120px 1fr 50px; }
+    .comp-row > div:nth-child(4),
+    .comp-row > div:nth-child(5),
+    .comp-row > span:nth-child(4),
+    .comp-row > span:nth-child(5) { display: none; }
+
+    /* KW table compact */
+    .kw-table th:nth-child(5),
+    .kw-table td:nth-child(5),
+    .kw-table th:nth-child(6),
+    .kw-table td:nth-child(6) { display: none; }
+
+    /* Review modal full screen */
+    #review-modal { padding: 0; }
+    #review-modal > div { border-radius: 0; max-width: 100%; height: 100vh; overflow-y: auto; }
+    #review-modal > div > div[style*="grid-template-columns"] { grid-template-columns: 1fr; }
+
+    /* Tools panel full width */
+    .tools-panel { width: 100%; border-radius: 16px 16px 0 0; }
+
+    /* FAB lower on mobile */
+    .tools-fab { bottom: 20px; right: 16px; }
+
+    /* Profile dropdown volle breedte */
+    .profile-dropdown { width: 100%; }
+
+    /* Input panel kaart compact */
+    .input-panel { gap: 10px; }
+  }
+
+  @media (max-width: 480px) {
+    /* Metric grid: ook 2 col op small phones */
+    .metric-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .metric-val { font-size: 22px; }
+    .topbar { padding: 10px 12px; }
+    .page { padding: 12px; }
+  }
+
   .sparkline { display: flex; align-items: flex-end; gap: 3px; height: 30px; }
   .spark-bar { width: 5px; border-radius: 2px 2px 0 0; background: var(--accent); opacity: 0.5; flex-shrink: 0; transition: opacity 0.15s; }
   .spark-bar:hover { opacity: 1; }
@@ -872,8 +999,11 @@
     </div>
   </div>
 
+  <!-- Sidebar overlay voor mobiel -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
   <!-- SIDEBAR -->
-  <nav class="sidebar">
+  <nav class="sidebar" id="sidebar">
     <!-- Profile switcher -->
     <div class="profile-switcher" id="profile-switcher" onclick="toggleProfileDropdown()">
       <div class="profile-avatar" id="profile-avatar">I</div>
@@ -979,6 +1109,9 @@
   <!-- MAIN -->
   <div class="main">
     <div class="topbar">
+      <button class="hamburger" id="hamburger-btn" onclick="toggleSidebar()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
       <div class="topbar-title" id="page-title">Content studio</div>
       <div style="position:absolute;left:50%;transform:translateX(-50%);pointer-events:none;">
         <span style="font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:700;color:#0f1117;letter-spacing:-0.3px;">INDASHIA.IO</span>
@@ -1042,12 +1175,12 @@
 
             <div class="form-group" style="margin-bottom:12px">
               <div class="form-label">Doelgroep</div>
-              <input class="form-input" type="text" placeholder="bijv. MKB eigenaren, marketeers" value="SEO professionals & marketeers">
+              <input class="form-input" id="doelgroep-input" type="text" placeholder="bijv. MKB eigenaren, marketeers" value="SEO professionals & marketeers">
             </div>
 
             <div class="form-group" style="margin-bottom:16px">
               <div class="form-label">Extra instructies</div>
-              <textarea class="form-textarea" placeholder="Specifieke eisen, bronnen, structuur..."></textarea>
+              <textarea class="form-textarea" id="extra-instructies" placeholder="Specifieke eisen, bronnen, structuur..."></textarea>
             </div>
 
             <button class="btn btn-primary btn-full" onclick="generateContent()">
@@ -1860,13 +1993,22 @@ async function generateContent() {
   const structOut = document.getElementById('struct-output');
   showLoading(out);
 
+  // Lees alle velden uit
   const subKws = getSubKws();
   const subKwLine = subKws.length > 0 ? `\nSecundaire keywords om subtiel te verwerken: ${subKws.join(', ')}.` : '';
+  const extraInstructies = (document.getElementById('extra-instructies')?.value || '').trim();
+  const extraLine = extraInstructies ? `\nExtra instructies: ${extraInstructies}` : '';
+  const doelgroep = (document.getElementById('doelgroep-input')?.value || 'algemeen publiek').trim();
+  const toonTags = Array.from(document.querySelectorAll('#page-content .tag.active')).map(t => t.textContent.trim());
+  const toon = toonTags.length > 0 ? toonTags.join(', ') : 'professioneel';
+  const typeLabels = { blog: 'blog artikel', pillar: 'uitgebreide pillar page', 'how-to': 'how-to gids met stappen', review: 'review / vergelijking' };
+  const typeLabel = typeLabels[type] || type;
 
-  const prompt = `Schrijf een professioneel SEO-geoptimaliseerd ${type} over "${kw}" in het Nederlands.
+  const prompt = `Schrijf een professioneel SEO-geoptimaliseerd ${typeLabel} over "${kw}" in het Nederlands.
+Doelgroep: ${doelgroep}.
+Schrijftoon: ${toon}.
 Structuur: pakkende intro (2 zinnen), 3 hoofdsecties met H2 koppen, praktische tips, sterke conclusie.
-Gebruik het primaire keyword 3-5x op natuurlijke wijze.${subKwLine}
-Schrijf voor SEO professionals & marketeers.
+Gebruik het primaire keyword 3-5x op natuurlijke wijze.${subKwLine}${extraLine}
 Format: gebruik <h3> voor kopjes, <p> voor tekst, <ul><li> voor lijsten, <strong> voor belangrijke termen.`;
 
   const text = await callClaude(prompt);
@@ -2036,6 +2178,33 @@ function getSubKws() {
   return Array.from(document.querySelectorAll('#subkw-list .subkw-input'))
     .map(i => i.value.trim()).filter(Boolean);
 }
+
+
+// ── Mobile sidebar ─────────────────────────────────────────────────────────
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const isOpen = sidebar.classList.contains('open');
+  if (isOpen) {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  } else {
+    sidebar.classList.add('open');
+    overlay.classList.add('open');
+  }
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// Sluit sidebar bij navigatie op mobiel
+const _origGoTo = goTo;
+goTo = function(id) {
+  _origGoTo(id);
+  if (window.innerWidth <= 768) closeSidebar();
+};
 
 // ============ CHARTS ============
 const darkOptions = {
