@@ -272,14 +272,15 @@ const LEGS=[
 const ROLE_LEGS={run:[1,4],walk:[2,5],bike:[3,6],support:[1,2,3,4,5,6]};
 const PEOPLE={
   Sporters:["Maarten","Thijs","Remko","Damian","Martijn","Hod","Maurice","Rob","Mara","Sam"],
-  Begeleiding:["Tim","Mark","Sander","Emile"]
+  Begeleiding:["Tim","Mark","Sander","Emile","Bas"]
 };
 // belknoppen begeleiding — tel null = nummer volgt nog
 const BEGELEIDING=[
   {name:"Mark",  role:"Chauffeur / begeleider", tel:"0639607689"},
-  {name:"Emile", role:"Chauffeur / begeleider", tel:"0683972686"},
-  {name:"Tim",   role:"Begeleider", tel:null},
-  {name:"Sander",role:"Begeleider", tel:null}
+  {name:"Emile", label:"Emile & Jack", role:"Chauffeur / begeleider", tel:"0683972686"},
+  {name:"Bas",   role:"Chauffeur / begeleider", tel:"0611745583"},
+  {name:"Sander",role:"Chauffeur / begeleider", tel:"0615869725"},
+  {name:"Tim",   role:"Begeleider", tel:null}
 ];
 
 // ---- state ----
@@ -402,15 +403,16 @@ function telFmt(t){return t.replace(/(\d{2})(\d{4})(\d{4})/,"$1 $2 $3")}
 function buildCalls(){
   document.getElementById("calls").innerHTML=BEGELEIDING.map(p=>{
     const init=p.name[0].toUpperCase();
+    const naam=p.label||p.name;
     if(p.tel){
       return `<a class="call" href="tel:+31${p.tel.slice(1)}">
         <span class="av">${init}</span>
-        <span class="ci"><span class="cn">Bel ${p.name}</span><span class="ct num">${telFmt(p.tel)}</span></span>
+        <span class="ci"><span class="cn">Bel ${naam}</span><span class="ct">${p.role}</span></span>
         <span class="ph">📞</span></a>`;
     }
     return `<div class="call off">
       <span class="av">${init}</span>
-      <span class="ci"><span class="cn">${p.name}</span><span class="ct">Nummer volgt</span></span>
+      <span class="ci"><span class="cn">${naam}</span><span class="ct">Nummer volgt</span></span>
       <span class="ph">📞</span></div>`;
   }).join("");
 }
